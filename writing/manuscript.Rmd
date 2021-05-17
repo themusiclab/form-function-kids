@@ -37,7 +37,7 @@ $^{\wedge}$These authors contributed equally.
 
 \*Corresponding author. Emails: [courtneyhilton\@g.harvard.edu](mailto:courtneyhilton@g.harvard.edu){.email}, [crowleliam\@myvuw.ac.nz](mailto:crowleliam@myvuw.ac.nz){.email}, [sam\@wjh.harvard.edu](mailto:sam@wjh.harvard.edu){.email}
 
-**Author Note.** A reproducible version of this manuscript, including all analysis and visualization code and data, is available at <https://github.com/themusiclab/form-function-kids>. Audio excerpts from the *Natural History of Song Discography* are available at <https://osf.io/vcybz> and can be explored interactively at <https://themusiclab.org/nhsplots>; all other study data and materials are available at <https://osf.io/b9tnu>. The study was preregistered at <https://osf.io/56zne>. For assistance, please contact C.H., L.C-T., and S.A.M.
+**Author Note.** A reproducible version of this manuscript, including all analysis and visualization code and data, is available at <https://github.com/themusiclab/form-function-kids>. Audio excerpts from the *Natural History of Song Discography* are available at <https://osf.io/vcybz> and can be explored interactively at <https://themusiclab.org/nhsplots>; all other study data and materials are available at <https://osf.io/b9tnu>. The study was preregistered at <https://osf.io/56zne>. For assistance, please contact C.B.H., L.C-T., and S.A.M.
 
 \bigskip
 
@@ -90,6 +90,8 @@ pacman::p_load(lmerTest,
 format_p <- function(p) {
   if (p < .001) {
     return("< .001")
+  } else if (p > .01) {
+    return(paste0("= ", round(p, digits = 2)))
   } else {
     return(paste0("= ", round(p, digits = 3)))
   }
@@ -101,7 +103,11 @@ format_p <- function(p) {
 # sets outputs as text + with thousand mark commas (e.g., 100,000 instead of 100000)
 
 f <- function(num) {
-  round(num,2) %>% format(., nsmall=0,big.mark=",")
+  round(num,2) %>% format(., nsmall=0, big.mark=",")
+}
+
+f2 <- function(num) {
+  formatC(num, 2, format="f") %>% format(., nsmall=0, big.mark=",")
 }
 
 custom_theme <- theme_bw() +
@@ -134,7 +140,6 @@ if (!file.exists(here("results", "selected_features.RData"))) { ## SM: for publi
 }
 
 # results from music feature analysis
-load(here("results", "feature_analysis.RData")) # this is only temporarily included...
 load(here("results", "selected_features.RData"))
 
 NHS_languages <- read_csv(here("data", "NHS_languages.csv"))
@@ -389,8 +394,6 @@ for (type_x in c("dance", "lullaby", "healing")) {
   mods$equiv[[type_x]] <- anova(m1,m2, test = "Chisq") %>% tidy() %>% slice(., 2)
 }
 
-
-
 ```
 
 ```{r multi-regression_models}
@@ -532,7 +535,7 @@ fig2
 
 ## Musical inferences improve only slightly with age
 
-To measure the degree to which these inferences change through development, we fit a simple linear regression predicting children's average accuracy from age, finding a small but significant effect (*F*(1, `r mods$accuracy$age$df.residual %>% f`) = `r mods$accuracy$age$statistic %>% f`, *p* `r mods$accuracy$age$p.value %>% format_p()`, *R*^2^ `r mods$accuracy$age$r.squared %>% format_p()`), consistent with our exploratory analyses and preregistered hypothesis (i.e., a small, or practically non-significant increase in accuracy).
+To measure the degree to which these inferences change through development, we fit a simple linear regression predicting children's average accuracy from age, finding a small but significant effect (*F*(1, `r mods$accuracy$age$df.residual %>% f`) = `r mods$accuracy$age$statistic %>% f2`, *p* `r mods$accuracy$age$p.value %>% format_p()`, *R*^2^ `r mods$accuracy$age$r.squared %>% format_p()`), consistent with our exploratory analyses and preregistered hypothesis (i.e., a small, or practically non-significant increase in accuracy).
 
 As a more rigorous test, which was not preregistered, we ran a mixed-effects model on participant-wise *d*-prime scores, with random intercepts for participants and random intercepts and slopes for song types. In this model, the effect of age did not reach statistical significance (*F*(1, `r mods$d$lm$all$DenDF %>% f`) = `r mods$d$lm$all$statistic %>% f`, *p* `r mods$d$lm$all$p.value %>% format_p()`).
 
@@ -544,7 +547,7 @@ We tested the relation between parent-child musical interactions and children's 
 
 With practically no change in accuracy from early childhood to early adolescence, might children's musical inferences be similar to those of adults? We used all available data from the "World Music Quiz" on <https://themusiclab.org>, a similar experiment for adults. Data were available from `r adults$n$total %>% f` participants who were older than 18 years old (`r adults$n$gender$Male %>% f` male, `r adults$n$gender$Female %>% f` female, `r adults$n$gender$Other %>% f` other, for `r adults$n$gender$not_reported %>% f` gender information was not available; mean age = `r adults$age$avg %>% round(1)`, SD = `r  adults$age$sd %>% round(1)`, range: `r adults$age$min`-`r adults$age$max`; n.b., a portion of these data were previously analyzed in @Mehr2019, but not in relation to children's performance on the task). For both adults and children, we computed the song-wise proportion of guesses for each song type (i.e., a measure of how strongly each song cued a given behavioral context) and then regressed these scores on each other.
 
-In all cases, children's inferences were highly predictive of adults', with *R*^2^ values approaching 1 (Figure 3a-c; dance: *F*(1, `r mods$kfc_fc$dance$df.residual %>% f`) = `r mods$kfc_fc$dance$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$dance$r.squared %>% f`; lullaby: *F*(1, `r mods$kfc_fc$lullaby$df.residual %>% f`) = `r mods$kfc_fc$lullaby$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$lullaby$r.squared %>% f`; healing: *F*(1, `r mods$kfc_fc$healing$df.residual %>% f`) = `r mods$kfc_fc$healing$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$healing$r.squared %>% f`; all *p* \<.001). This relationship was also robust when inferences were reduced from a continuous score to a discrete ranking of the songs by guessing percentage. We quantified the strength of this relationship using Kendall's rank correlation coefficient $\tau$: a more conservative, non-parametric measure of correlation. Again, there was a strong positive correlation between children's and adults' inferences for all song types (dance: $\tau$ = `r mods$tau$dance$estimate %>% round(3)`; lullaby: $\tau$ = `r mods$tau$lullaby$estimate %>% round(3)`; healing: $\tau$ = `r mods$tau$healing$estimate %>% round(3)`; all *p* \<.001).
+In all cases, children's inferences were highly predictive of adults', with *R*^2^ values approaching 1 (Figure 3a-c; dance: *F*(1, `r mods$kfc_fc$dance$df.residual %>% f`) = `r mods$kfc_fc$dance$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$dance$r.squared %>% f`; lullaby: *F*(1, `r mods$kfc_fc$lullaby$df.residual %>% f`) = `r mods$kfc_fc$lullaby$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$lullaby$r.squared %>% f`; healing: *F*(1, `r mods$kfc_fc$healing$df.residual %>% f`) = `r mods$kfc_fc$healing$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$healing$r.squared %>% f`; all *p* \<.001). This relationship was also robust when inferences were reduced from a continuous score to a discrete ranking of the songs by guessing percentage. We quantified the strength of this relationship using Kendall's rank correlation coefficient $\tau$: a more conservative, non-parametric measure of correlation. Again, there was a strong positive correlation between children's and adults' inferences for all song types (dance: $\tau$ = `r mods$tau$dance$estimate %>% round(3)`; lullaby: $\tau$ = `r mods$tau$lullaby$estimate %>% round(3)`; healing: $\tau$ = `r mods$tau$healing$estimate %>% round(3)`; all *p* \< .001).
 
 ```{r fig3, fig.width = 9, fig.height = 6, fig.cap = "\\textbf{Figure 3 | Children and adults make similar musical inferences that are driven by the same acoustical features.} The scatterplots (\\textbf{a-c}) show the tight correlations between children's and adults' musical inferences. Each point represents average percent guesses that it was (\\textbf{a}) \"for dancing\"; (\\textbf{b}) \"for putting a baby to sleep\"; and (\\textbf{c}) \"to make a sick person feel better\"; the songs' \\textit{actual} behavioral contexts are color-coded, with dance songs in blue, lullabies in green, and healing songs in red. The lines depict simple linear regressions and the gray shaded areas show the 95\\% confidence intervals from each regression. The bar plots (\\textbf{d-f}) show the similar amounts of variance (partial-$R^{2}$) in childrens' (lighter bars) and adults' (darker bars) guesses that is explained by musical features selected via LASSO regularization, for each of the three song types, computed from multiple regressions."}
 
