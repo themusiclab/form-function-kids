@@ -1,4 +1,4 @@
-# Infants relax in response to unfamiliar foreign lullabies
+# Children infer the behavioral contexts of unfamiliar foreign songs
 
 This repository contains data and code for Hilton and Crowley-de Thierry et al. (2021, Under revision). You can read the preprint at https://psyarxiv.com/rz6qn. The pre-registration and stimuli are available at https://osf.io/56zne.
 
