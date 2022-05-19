@@ -2,42 +2,52 @@
 bibliography: themusiclab.bib
 csl: apa.csl
 header-includes:
-- \usepackage[left]{lineno}
+- \usepackage{ragged2e}
 - \usepackage{caption}
 - \captionsetup[figure]{labelformat=empty}
 - \usepackage{tabu}
 - \usepackage{afterpage}
 - \usepackage{mdframed}
 - \usepackage{xcolor}
+- \usepackage{soul}
 - \usepackage{float}
 - \definecolor{bleu}{HTML}{2200cc}
 notes-after-punctuation: no
 output:
-  pdf_document:
+  pdf_document: 
     fig_caption: yes
-    latex_engine: lualatex
+    latex_engine: xelatex
+  word_document: default
 urlcolor: bleu
 link-citations: yes
 linkcolor: bleu
-always_allow_html: true
+always_allow_html: yes
 ---
 
-# Children infer the behavioral contexts of unfamiliar foreign songs
+\raggedright
+\LARGE
+\textbf{Children infer the behavioral contexts of unfamiliar foreign songs}
 
-Courtney B. Hilton$^{1,\wedge,\ast}$, Liam Crowley-de Thierry$^{2,\wedge,\ast}$, Ran Yan$^{1,3}$, Alia Martin$^{2}$, & Samuel A. Mehr$^{1,2,4,\ast}$
+\vspace{0.1in}
 
-\small
+\justifying
+\normalsize
+Courtney B. Hilton$^{1,2,\wedge,\ast}$, Liam Crowley-de Thierry$^{3,\wedge,\ast}$, Ran Yan$^{2,4}$, Alia Martin$^{3}$, & Samuel A. Mehr$^{1,2,5,\ast}$
 
-$^{1}$Department of Psychology, Harvard University, Cambridge, MA 02138, USA.\
-$^{2}$School of Psychology, Victoria University of Wellington, Wellington 6012, New Zealand.\
-$^{3}$Department of Psychology, Smith College, Northampton, MA 01063, USA.\
-$^{4}$Data Science Initiative, Harvard University, Cambridge, MA 02138, USA.
+\footnotesize
+$^{1}$Haskins Laboratories, New Haven, CT 06511, USA.\
+$^{2}$Department of Psychology, Harvard University, Cambridge, MA 02138, USA.\
+$^{3}$School of Psychology, Victoria University of Wellington, Wellington 6012, New Zealand.\
+$^{4}$Department of Psychology, University of Michigan, Ann Arbor, MI 48109, USA.\
+$^{5}$Data Science Initiative, Harvard University, Cambridge, MA 02138, USA.  
 
 $^{\wedge}$These authors contributed equally.
 
-\*Corresponding author. Emails: [courtneyhilton\@g.harvard.edu](mailto:courtneyhilton@g.harvard.edu){.email}, [crowleliam\@myvuw.ac.nz](mailto:crowleliam@myvuw.ac.nz){.email}, [sam\@wjh.harvard.edu](mailto:sam@wjh.harvard.edu){.email}
+\*Corresponding author. Emails: [courtneyhilton\@g.harvard.edu](mailto:courtneyhilton@g.harvard.edu){.email}, [liam.crowleydethierry\@vuw.ac.nz](mailto:liam.crowleydethierry@vuw.ac.nz){.email}, [sam\@wjh.harvard.edu](mailto:sam@wjh.harvard.edu){.email}
 
-**Author Note.** A reproducible version of this manuscript, including all analysis and visualization code and data, is available at <https://github.com/themusiclab/form-function-kids>. Audio excerpts from the *Natural History of Song Discography* are available at <https://osf.io/vcybz> and can be explored interactively at <https://themusiclab.org/nhsplots>; all other study data and materials are available at <https://osf.io/b9tnu>. The study was preregistered at <https://osf.io/56zne>. For assistance, please contact C.B.H., L.C-T., and S.A.M.
+\small
+
+**Author Note.** All data and materials, including a reproducible version of this manuscript with all analysis and visualization code, are available at <https://github.com/themusiclab/form-function-kids>. Audio excerpts from the *Natural History of Song Discography* are available at <https://osf.io/vcybz> and can be explored interactively at <https://themusiclab.org/nhsplots>. The study was preregistered at <https://osf.io/56zne>. For assistance, please contact C.B.H., L.C-T., and S.A.M.
 
 \bigskip
 
@@ -51,31 +61,33 @@ options(scipen = 999)
 
 ```
 
-```{r libraries, include = FALSE}
+```{r libraries}
 
 library(pacman)
-pacman::p_load(lmerTest,
-               broom,
-               broom.mixed,
-               sf,
-               colorspace,
-               Rmisc,
-               ggtext,
-               ggpubr,
-               kableExtra,
-               Hmisc,
-               gridExtra,
-               scales,
-               psycho,
-               patchwork,
-               png,
-               here,
-               sjmisc,
-               tidyverse,
-               scales,
-               glue, 
-               rsq,
-               ggpubr)
+p_load(
+  lmerTest,
+  broom,
+  broom.mixed,
+  sf,
+  colorspace,
+  Rmisc,
+  ggtext,
+  ggpubr,
+  kableExtra,
+  Hmisc,
+  gridExtra,
+  scales,
+  psycho,
+  patchwork,
+  png,
+  here,
+  sjmisc,
+  tidyverse,
+  scales,
+  glue, 
+  rsq,
+  ggpubr
+)
 
 # create a snapshot of all package versions for posterity
 #renv::consent(provided = TRUE)
@@ -87,7 +99,7 @@ pacman::p_load(lmerTest,
 ```{r custom_functions}
 
 # format p-values automatically
-format_p <- function(p) {
+fp <- function(p) {
   if (p < .001) {
     return("< .001")
   } else if (p > .01) {
@@ -102,13 +114,12 @@ format_p <- function(p) {
 # Formats numbers for use in manuscript
 # sets outputs as text + with thousand mark commas (e.g., 100,000 instead of 100000)
 
-f <- function(num) {
-  round(num,2) %>% format(., nsmall=0, big.mark=",")
-}
-
-f2 <- function(num) {
-  formatC(num, 2, format="f") %>% format(., nsmall=0, big.mark=",")
-}
+f <- function(num) {format(num, big.mark=",")}
+r1 <- function(num) {round(num,1) %>% format(., nsmall=1, big.mark=",")}
+r2 <- function(num) {round(num,2) %>% format(., nsmall=2, big.mark=",")}
+r3 <- function(num) {round(num,3) %>% format(., nsmall=3, big.mark=",")}
+p1 <- function(num) {percent(num, accuracy = 0.1)}
+p0 <- function(num) {percent(num, accuracy = 1)}
 
 custom_theme <- theme_bw() +
   theme(legend.position = "none",
@@ -119,322 +130,71 @@ theme_set(custom_theme)
 
 ```
 
-```{r load_data, include = FALSE}
+```{r load_data}
 
-# checks if preprocessed data exists, if not: runs builder
-# (!!you should also re-run script if you have updated the data)
-if (!file.exists(here("results", "preprocessed_data.RData"))) { ## SM: for public repo, we'll need to use a de-identified data file as the source (maybe just the post-processing file with any identifiers removed)
+####################################################################
+# This manuscript contains computations that take a long time to run
+# For convenience, these computations are parameterized such that
+# they are not run each time the manuscript is knitted by default
+# and instead just load the last saved run.
+# The same is true for figures, which do not need to be regenerated
+# each time the manuscript is knitted.
+# If you want to regenerate anything in your knit, set full_run
+# below to TRUE. Otherwise, do nothing.
+####################################################################
+
+full_run <- FALSE
+
+if (full_run == TRUE) {
   source(here("analysis", "builder.R"))
+  source(here("analysis", "feature_selection.R"))
+  source(here("analysis", "analyses.R"))
+  knitr::knit(here("viz", "figures.Rmd"))
+} else {
+  load(here("results", "preprocessed_data.RData"))
+  load(here("results", "lasso_analyses.RData"))
+  load(here("results", "analyses.RData"))
 }
-
-# load all preprocessed data from builder
-load(here("results", "preprocessed_data.RData"))
 
 # map
 discogMap <- read_csv(here('data', "discogMap.csv")) %>%
   filter(type!="Love") %>%
   mutate(type = as.factor(type))
 
-if (!file.exists(here("results", "selected_features.RData"))) { ## SM: for public repo, we'll need to use a de-identified data file as the source (maybe just the post-processing file with any identifiers removed)
-  source(here("analysis", "feature_selection.R"))
-}
-
-# results from music feature analysis
-load(here("results", "selected_features.RData"))
-
 NHS_languages <- read_csv(here("data", "NHS_languages.csv"))
 
-```
-
-```{r data_lists}
-
-# all data referenced in manuscript will be in one of these lists
-kids <- list() # info of kid participants
-adults <- list() # info of adult participants
-mods <- list() # statistical models
-plots <- list() # plots
-
-```
-
-```{r kid_stats}
-
-# 1 row = 1 kid
-kid_participants <- KFC_clean %>%
-  group_by(user_id) %>%
-  summarise(
-    across(c(gender,country,language,age,singOften,playMusicOften), unique),
-    gender = if_else(is.na(gender), "not_reported", gender),
-    accuracy = mean(correct),
-    med_rt = median(rt)
-    ) %>% 
-  mutate(country = case_when(
-    country == "Aotearoa/New Zealand" ~ "New Zealand",
-    country == "Kingdom of the Netherlands" ~ "Netherlands",
-    country == "Russia" ~ "Russian Federation",
-    country == "South Korea" ~ "Republic of Korea",
-    TRUE ~ as.character(country)))
-
-# general participant characteristics
-kids$n$total <- nrow(kid_participants)
-kids$n$countries <- length(unique(kid_participants$country))
-kids$n$languages <- length(unique(kid_participants$language))
-
-# compute sample size of adults for Male, Female, Other, and Not reported
-for (gend in unique(kid_participants$gender)) {
-  kids$n$gender[[{{gend}}]] <- nrow(filter(kid_participants, gender == {{gend}}))
-}
-
-# info about which were excluded and why
-kids$excl$complete <- exclusions$before_exclusions - exclusions$non_complete
-kids$excl$complete_age <- kids$excl$comlete - exclusions$age
-
-# task performance (at participant level)
-kids$correct$avg <- mean(kid_participants$accuracy)
-kids$correct$sd <- sd(kid_participants$accuracy)
-
-kids$heal$guesses <- KFC_clean %>% 
-  filter(type == "HEALING") %>% 
-  count(response, sort = TRUE) %>% 
-  mutate(pcnt = (n / sum(n)) %>% percent()) %>% 
-  select(response, pcnt) %>% 
-  pivot_wider(names_from = response, values_from = pcnt)
-
-kids$all$heal_guesses <- KFC_clean %>% 
-  filter(response == "HEALING") %>% 
-  count(type, sort = TRUE) %>% 
-  mutate(pcnt = (n / sum(n)) %>% percent()) %>% 
-  select(type, pcnt) %>% 
-  pivot_wider(names_from = type, values_from = pcnt)
-
-# proportion of guesses per song type
-kids$proportions <- guesses$by_type %>%
-  select(-FC) %>%
-  group_by(guess) %>%
-  summarise(avg = percent(mean(KFC), accuracy = 0.1)) %>%
-  split(.$guess)
-
-```
-
-```{r adult_stats}
-
-# 1 row = 1 adult
-adult_participants <- FC_clean %>%
+adult_covariates <- read_csv(here('data', "covariatesFC.csv")) %>%
   group_by(user_id) %>%
   summarise(gender = if_else(is.na(unique(gender)), "not_reported", unique(gender)),
-            age = unique(age))
-
-# total sample size of adults
-adults$n$total <- nrow(adult_participants)
-
-# compute sample size of adults for Male, Female, Other, and Not reported
-for (gend in unique(adult_participants$gender)) {
-  adults$n$gender[[{{gend}}]] <- nrow(filter(adult_participants, gender == {{gend}}))
-}
-
-# mean age
-adults$age$avg <- mean(as.numeric(adult_participants$age), na.rm = TRUE)
-adults$age$sd <- sd(as.numeric(adult_participants$age), na.rm = TRUE)
-adults$age$min <- min(as.numeric(adult_participants$age), na.rm = TRUE)
-adults$age$max <- max(as.numeric(adult_participants$age), na.rm = TRUE)
-
-```
-
-```{r kid_regressions, include = FALSE}
-
-# compute simple linear regression predicting accuracy by "age", "singOften", "playMusicOften"
-for (covariate in c("age", "singOften", "playMusicOften")) {
-  mods$accuracy[[covariate]] <- lm(accuracy ~ as.numeric(kid_participants[[covariate]]), data = kid_participants) %>% glance()
-}
-
-# median RT predicted by age
-mods$rt$age <- lm(med_rt ~ age, data = kid_participants) %>% glance()
-
-```
-
-```{r kids_adults_comparison}
-
-# compute simple linear regression over song types
-for (type in guesses$by_type$guess) {
-  mods$kfc_fc[[{{type}}]] <- lm(FC ~ KFC, data = filter(guesses$by_type, guess == {{type}})) %>% glance()
-}
-
-# Using Kendall's tau
-ranked_guesses <- guesses$by_type %>%
-  group_by(guess) %>%
-  mutate(diff = KFC - FC,
-         KFC_rank = as.integer(rank(desc(KFC))),
-         FC_rank = as.integer(rank(desc(FC))))
-
-# compute tau correlations over song types
-for (type in unique(guesses$by_type$guess)) {
-  mods$tau[[{{type}}]] <- cor.test(filter(ranked_guesses, guess == {{type}}) %>% pull(KFC_rank),
-                                        filter(ranked_guesses, guess == {{type}}) %>% pull(FC_rank),
-                                         method = "kendall") %>% tidy()
-}
-
-```
-
-```{r d-prime_group_level}
-
-for (type_var in c('DANCE', 'LULLABY', 'HEALING')) {
-  kids$d$group[[{{str_to_lower(type_var)}}]] <- KFC_clean %>%
-    group_by(song, type, response) %>%
-    summarise(n = n()) %>%
-    mutate(type = if_else(type == type_var, type_var, 'OTHER'),
-           response = if_else(response == type_var, type_var, 'OTHER')) %>%
-    pivot_wider(names_from = c(type, response), values_from = n, names_sep = "_", values_fn = sum) %>%
-    summarise(
-      hit = sum(eval(as.name(paste(type_var, type_var, sep = "_")))),
-      FA = sum(eval(as.name(paste("OTHER", type_var, sep = "_")))),
-      miss = sum(eval(as.name(paste(type_var, "OTHER", sep = "_")))),
-      CR = sum(eval(as.name(paste("OTHER", "OTHER", sep = "_"))))) %>%
-    replace_na(list(hit = 0, FA = 0, miss = 0, CR = 0)) %>%
-    summarise(sensitivity = psycho::dprime(n_hit = sum(hit), n_fa = sum(FA), n_miss = sum(miss), n_cr = sum(CR))) %>%
-    summarise(d_prime = sensitivity$dprime, beta = sensitivity$beta, c =  sensitivity$c, type = str_to_lower(type_var))
-}
-
-# average d-prime across types
-kids$d$group$avg <- bind_rows(kids$d$group) %>% pull(d_prime) %>% mean()
-
-```
-
-```{r d-prime_participant_level}
-
-# d-primes for each participant for each song type
-for (type_var in c('DANCE', 'LULLABY', 'HEALING')) {
-  kids$d$ages[[{{str_to_lower(type_var)}}]] <- KFC_clean %>%
-    group_by(type, response, age, user_id) %>%
-    summarise(n = n()) %>%
-    mutate(type = if_else(type == type_var, type_var, 'OTHER'),
-           response = if_else(response == type_var, type_var, 'OTHER')) %>%
-    pivot_wider(names_from = c(type, response), values_from = n, names_sep = "_", values_fn = sum) %>%
-    group_by(age, user_id) %>%
-    summarise(
-      hit = sum(eval(as.name(paste(type_var, type_var, sep = "_")))),
-      FA = sum(eval(as.name(paste("OTHER", type_var, sep = "_")))),
-      miss = sum(eval(as.name(paste(type_var, "OTHER", sep = "_")))),
-      CR = sum(eval(as.name(paste("OTHER", "OTHER", sep = "_"))))) %>%
-    replace_na(list(hit = 0, FA = 0, miss = 0, CR = 0)) %>%
-    group_by(age, user_id) %>%
-    summarise(sensitivity = psycho::dprime(n_hit = sum(hit), n_fa = sum(FA), n_miss = sum(miss), n_cr = sum(CR))) %>%
-    summarise(d_prime = sensitivity$dprime, beta = sensitivity$beta, c =  sensitivity$c, type = str_to_lower(type_var))
-}
-
-# d-primes averaged for each age bin
-kids$d$avg$ages <- bind_rows(kids$d$ages) %>% #SDT_all_ages
-  group_by(type, age) %>%
-  summarise(mean_d_prime = mean(d_prime),
-            sd_d_prime = sd(d_prime),
-            n_kids = n(),
-            se_d_prime = sd_d_prime / sqrt(n_kids),
-            conf_95 = qt(.975, n_kids - 1) * se_d_prime)
-
-# d-primes averaged for each song type
-kids$d$avg$types <- bind_rows(kids$d$ages) %>%
-  group_by(type) %>%
-  summarise(mean_d_prime = mean(d_prime),
-            sd_d_prime = sd(d_prime),
-            n_kids = n(),
-            se_d_prime = sd_d_prime / sqrt(n_kids),
-            conf_95 = qt(.975, n_kids - 1) * se_d_prime)
-
-```
-
-```{r d-prime_regressions}
-
-# t.tests + simple linear models
-for (type_x in c("dance", "healing", "lullaby")) {
-  mods$d$t.test[[{{type_x}}]] <- t.test(kids$d$ages[[{{type_x}}]]$d_prime, mu = 0, alternative = "two.sided")
-  mods$d$lm[[{{type_x}}]] <- lm(d_prime ~ age, data = kids$d$ages[[{{type_x}}]]) %>% tidy()
-}
-
-# linear model across all ages for all song types
-mods$d$lm$all <- bind_rows(kids$d$ages) %>% 
-  ungroup() %>% 
-  mutate(age = center(age)) %>% 
-  lmer(d_prime ~ age + (1|user_id) + (type|age), data = .) %>% anova() %>% tidy()
-
-# add d-primes to participant list
-kids$d$all <- kid_participants %>%
-  inner_join(.,
-             select(bind_rows(kids$d$ages), user_id, d_prime, type),
-             by = "user_id")
-
-# linear regression on accuracy by parent singing to child + playinng recorded music
-mods$d$parentSing <- lm(d_prime ~ as.numeric(singOften), data = kids$d$all) %>% glance()
-mods$d$playMusic <- lm(d_prime ~ as.numeric(playMusicOften), data = kids$d$all) %>% glance()
-
-```
-
-```{r correlations_between_KFC_FC_guesses}
-
-# compute correlations between KFC and FC over ages
-kids$corr$wFC <- guesses$by_type_age %>%
-  group_by(age, response) %>%
-  summarise(KFC_FC_correlation = cor(FC, KFC))
-
-# linear regression on R^2 of child-adult guessing correlations by child age
-mods$kfc_fc$corr$age <- lm(KFC_FC_correlation ~ age, data = kids$corr$wFC ) %>% glance()
-
-# testing whether multiple regression models for kids and adults are statistically equivalent
-for (type_x in c("dance", "lullaby", "healing")) {
-  # pool + wrangle data
-  tmp <- songs %>% 
-    pivot_longer(cols = c(glue("KFC_{type_x}"), glue("FC_{type_x}")), names_to = type_x, values_to = "probs")
-  
-  # define model formulae
-  x1 <- reformulate(selected_features[[type_x]], response = "probs")
-  x2 <- reformulate(c(selected_features[[type_x]], type_x), response = "probs")
-  
-  # run models
-  m1 <- lm(x1, data = tmp)
-  m2 <- lm(x2, data = tmp)
-  
-  # test using Chi-square test
-  mods$equiv[[type_x]] <- anova(m1,m2, test = "Chisq") %>% tidy() %>% slice(., 2)
-}
-
-```
-
-```{r multi-regression_models}
-
-# Compute multiple regression models on LASSO selected features
-for (data_x in c("KFC", "FC")) {
-  for (type_x in c("dance", "lullaby", "healing")) {
-    mods$feature[[data_x]][[type_x]] <- lm(
-      reformulate(selected_features[[type_x]], response = paste(data_x, type_x, sep = "_")),
-      data = songs)
-    
-    mods$feature$s[[data_x]][[type_x]] <- mods$feature[[data_x]][[type_x]] %>% glance()
-  }
-}
+            age = unique(age),
+            country = unique(country),
+            language = unique(language))
 
 ```
 
 ```{=tex}
 \normalsize
 \begin{mdframed}[backgroundcolor=gray!20]
-Music commonly appears in a variety of behavioral contexts in which it can be seen as playing a functional role, such as when a parent sings a song with the goal of soothing their child. Humans readily make inferences about such behavioral contexts based on sound alone. These inferences tend to be accurate, even if the songs are in foreign languages or unfamiliar musical idioms: upon hearing a Blackfoot lullaby, a Korean listener with no experience of Blackfoot music, language, or broader culture is far more likely to judge the music’s function as “to soothe a baby” than as “for dancing”. Are such inferences shaped by musical exposure or does the human mind naturally detect links between musical form and function? Children's developing experiences with music provide a clear test of this question. We studied musical inferences in a large sample of children ($N$  = `r kids$n$total %>% f`), who heard dance, lullaby, and healing songs from `r length(unique(songs$culture))` world cultures and who were tasked with guessing the original behavioral context in which each was performed. We found little evidence for an effect of experience: children reliably inferred the original behavioral contexts with only minimal improvement in performance from the youngest (age 3 or younger) to the oldest (age 12). Children's inferences tightly correlated with those of adults for the same songs, as collected from a similar massive online experiment ($N$ = `r adults$n$total %>% f`). Moreover, the same musical/acoustical features were predictive of the inferences of both samples. These findings suggest that accurate inferences about the behavioral contexts of music, driven by universal links between form and function in music across cultures, do not require extensive musical experience.
+Music commonly appears in behavioral contexts in which it can be seen as playing a functional role, as when a parent sings a lullaby with the goal of soothing a baby. Humans readily make inferences, on the basis of the sounds they hear, regarding the behavioral contexts associated with music. These inferences tend to be accurate, even if the songs are in foreign languages or unfamiliar musical idioms; upon hearing a Blackfoot lullaby, a Korean listener with no experience of Blackfoot music, language, or broader culture is far more likely to judge the music’s function as ``used to soothe a baby" than ``used for dancing". Are such inferences shaped by musical exposure or does the human mind naturally detect links between these kinds of musical form and function? Children's developing experience of music provides a clear test of this question. We studied musical inferences in a large sample of children recruited online ($N$  = `r kids$n$total %>% f`), who heard dance, lullaby, and healing songs from `r length(unique(songs$culture))` world cultures and who were tasked with guessing the original behavioral context in which each was performed. Children reliably inferred the original behavioral contexts with only minimal improvement in performance from the youngest (age 4) to the oldest (age 16), providing little evidence for an effect of experience. Children's inferences tightly correlated with those of adults for the same songs, as collected from a similar online experiment ($N$ = `r adults$n$total %>% f`). Moreover, similar acoustical features were predictive of the inferences of both samples. These findings suggest that accurate inferences about the behavioral contexts of music, driven by universal links between form and function in music across cultures, do not always require extensive musical experience.
 
 \end{mdframed}
 ```
 \bigskip
 
-\linenumbers
 
-Music is a ubiquitous part of human culture that plays a variety of functional roles in our day-to-day lives [@Nettl2005; @Mehr2019; @Trehub2015a; @Lomax1968]: We sing songs to entertain each other, to find spiritual connection, to tell stories, to regulate our emotions, or just to pass the time.
+Music is a ubiquitous part of human culture that plays a variety of functional roles in our day-to-day lives [@Mehr2019; @Trehub2015a; @Nettl2005; @Lomax1968]: We sing songs to entertain each other, to find spiritual connection, to tell stories, to regulate our emotions, or just to pass the time.
 
-Whereas some musical contexts are idiosyncratic, like how complex geographical knowledge is culturally encoded in song by some groups of Indigenous Australians [@Norris2014], others are recurrent across societies. These latter contexts tend to also be accompanied by recurrent sets of features. For example, in Western societies, lullabies tend to have slow tempos; smooth, minimally accented contours; and a narrow dynamic and pitch range [@Trehub1993; @Trehub1998; @Bergeson1999], a pattern replicated in a globally representative sample of societies [@Mehr2019]. That music appears universally in conjunction with a given behavioral context (e.g., infant care), and that examples of music in that context share particular musical features (e.g., minimal accents), implies a link between form and function in music production.
+Whereas some musical contexts are idiosyncratic, as in the encoding of complex geographical knowledge in song by some groups of Indigenous Australians [@Norris2014], other contexts are recurrent across societies and tend to co-occur with the same acoustic features. For example, lullabies tend to have slow tempos; smooth, minimally accented contours; and a narrow dynamic and pitch range, as has been long-established in western societies [@Bergeson1999; @Trehub1998a; @Trehub1993], and recently in more globally representative samples of societies [@Hilton2021a; @Mehr2019]. The findings that music appears universally in conjunction with particular behavioral contexts (e.g., infant care), and that examples of music in a given context share particular acoustic features (e.g., minimal accents), imply a link between form and function in music production.
 
-Adults are sensitive to this link, in that they reliably distinguish song functions even when examples are unfamiliar and foreign. This has been demonstrated in experiments where naïve listeners are asked to identify the context in which a song was originally used, purely on the basis of the sounds it contains. Indeed, they successfully identify lullabies when paired with love songs as foils [@Trehub1993a] and distinguish lullabies, dance songs, healing songs, and love songs from one another [@Mehr2018a; @Mehr2019].
+Adults are sensitive to this link, in that they reliably distinguish song functions even when examples are unfamiliar and foreign. This has been demonstrated in experiments where naïve listeners are asked to identify the context in which a song was originally used, purely on the basis of the sounds it contains. Adult listeners indeed identify lullabies when paired with love songs as foils [@Trehub1993a] and distinguish lullabies, dance songs, healing songs, and love songs from one another [@Mehr2019; @Mehr2018a].
 
-How do adults come to be sensitive to these musical form-function links? Across the lifespan, musical experience is ubiquitous and rich, including through infancy [@Mendoza2021] and childhood [@Bonneville-Roussy2013], so it's plausible that a sensitivity to form and function in music is shaped by direct musical experience. This is especially so given people's detailed long-term memories for music [@Levitin1996; @Krumhansl2010a] and the importance of implicit associative learning in musical knowledge [@Rohrmeier2012].
+How do adults come to be sensitive to these musical form-function links? Across the lifespan, musical experience is ubiquitous and rich, including through infancy [@Mendoza2021; @Yan2021] and childhood [@Bonneville-Roussy2013; @Mehr2014]. It is therefore plausible that a sensitivity to form and function in music is the result of acquired associations through direct musical experience; especially so given humans' detailed long-term memories for music [@Krumhansl2010a; @Levitin1996], including in infancy [@Mehr2016; @Saffran2000], and the importance of implicit associative learning in musical knowledge [@Rohrmeier2012].
 
-Two forms of evidence point to an alternative explanation, however. First, systematic form-function pairings are found in vocalizations throughout the animal kingdom [@Morton1977; @Fitch2002], and likely reflect innate aspects of vocal signaling [@Darwin1871; @Mehr2020]. Indeed, emotional vocalizations are not only cross-culturally intelligible within humans [@Scherer2001; @Chronaki2018; including in music: @Balkwill1999], but also between species [@Filippi2017]. Humans extend these emotional inferences to environmental sounds [@Ma2015] and even to abstract shapes [@Sievers2019]. Form-function inferences in music might borrow from and extend this repertoire of instinctive signaling mechanisms.
+Two forms of evidence point to an alternative explanation, however. First, systematic form-function pairings are found in vocalizations throughout the animal kingdom [@Fitch2002; @Morton1977], and are thought to reflect innate aspects of vocal signaling [@Mehr2021; @Darwin1871]. Indeed, emotional vocalizations are not only cross-culturally intelligible within humans [in speech: @Cowen2019; @Chronaki2018; @Scherer2001; in music: @Balkwill1999], but also between species [@Kamiloglu2020; @Filippi2017]. Humans even extend these emotional inferences to non-animate environmental sounds [@Ma2015] and abstract shapes [@Sievers2019]. And a broader class of innate psychoacoustical relationships are thought to underlie the surprisingly robust cross-linguistic associations between certain speech sounds and meaning in the world's languages [@Yu2021; @Blasi2016; @Imai2008; @Nuckolls1999]. Form-function inferences in music may rely upon similar, largely-innate mechanisms.
 
-Second, despite their lesser degree of exposure to music, relative to adults, infants are affected by music in ways that are predictable from the behavioral functions of music. For example, infants relax more in response to unfamiliar foreign lullabies than non-lullabies [@Bainbridge2021], and move rhythmically more in response to metrical music than speech [@Zentner2010]. While neither implies that infants are *aware* of the function of a song, early-developing responses to music may eventually support form-function inferences when combined with precocial social inferences [@Powell2013; @Bohn2019; @Mehr2016]; biases for socially meaningful stimuli [@Frank2014]; and functional intuitions about other socially embedded vocalizations, such as speech [@Martin2012; @Vouloumanos2014].
+Second, despite their lesser degree of exposure to music, relative to adults, infants are affected by music in ways that are predictable from behavioral function. For example, infants relax more in response to lullabies than non-lullabies, even when the songs are in unfamiliar languages and from unfamiliar cultures [@Bainbridge2021]; and infants move rhythmically more in response to metrical music than speech [@Zentner2010]. While neither implies that infants are *aware* of the functions of the songs they hear, these early-developing responses to music may provide a grounding for later higher-level social inferences about music, which may develop through interaction with precocial social intelligence [@Bohn2019; @Mehr2016; @Mehr2017; @Powell2013; @Herrmann2007; @Tomasello2005], along with functional intuitions about other social signals, such as speech [@Vouloumanos2014; @Martin2012].
 
-To test between these perspectives, we studied musical inferences across early and middle childhood, focusing on whether and how these inferences change as children's musical experience grows. Children participated in a citizen-science experiment (readers can try it with their children at <https://themusiclab.org>) where they listened to examples of lullabies, dance songs, and healing songs from `r length(unique(songs$culture))` mostly small-scale societies, drawn from the *Natural History of Song Discography* [@Mehr2019], and were tasked with guessing the original behavioral context.
+To test between these competing explanations — invoking learned vs. innate mechanisms — we studied musical inferences across early and middle childhood, focusing on whether and how these inferences change as children's musical experience grows. Children participated in a citizen-science experiment (readers can try it with their children at <https://themusiclab.org/quizzes/kfc>) where they listened to examples of lullabies, dance songs, and healing songs from `r length(unique(songs$culture))` mostly small-scale societies, drawn from the *Natural History of Song Discography* [@Mehr2019], and were tasked with guessing the original behavioral context.
 
 To examine the degree to which musical experience affected children's inferences, we conducted a series of preregistered and exploratory analyses, asking (1) whether children are sensitive to form and function in music; (2) how their sensitivity changes over the course of childhood; (3) how children's inferences compare to those of adults; and (4) whether and how children's inferences are predictable from the acoustical features of the music.
 
@@ -442,384 +202,351 @@ To examine the degree to which musical experience affected children's inferences
 
 ## Participants
 
-Children visited the citizen science website <https://themusiclab.org> to participate. We posted links to the experiment on social media, which were spread via organic sharing, and we also advertised the experiment on <https://childrenhelpingscience.com>, a website disseminating information on web-based research for children [@Sheskin2020]. Recruitment was/is open-ended; at the time of analysis, we had complete data from `r kids$excl$complete %>% f` children with reported ages from "3 or under" to "17 or older". Given our interest in early development, we chose to analyze only data from the youngest 10 age bands (ages "3 or under" to "12"). We excluded older children ($n$ = `r exclusions$age %>% f`); children whose parents indicated that they had assisted their child during the experiment ($n$ = `r exclusions$parentHelp %>% f`); children who indicated they had played the game previously ($n$ = `r exclusions$playedBefore %>% f`); children with known hearing impairments ($n$ = `r exclusions$hearing %>% f`); and children who were missing data from the test phase ($n$ = `r exclusions$missing %>% f`).
+Children visited the citizen science website <https://themusiclab.org> to participate. We posted links to the experiment on social media, which were spread via organic sharing, and we also advertised the experiment on <https://childrenhelpingscience.com>, a website disseminating information on web-based research for children [@Sheskin2020]. Recruitment was/is open-ended; at the time of analysis, we had complete data from `r kids$excl$complete %>% f` participants with reported ages from "3 or under" to "17 or older" in one-year increments. 
 
-This left `r kids$n$total %>% f` participants for analysis (`r kids$n$gender$Male %>% f` male, `r kids$n$gender$Female %>% f` female, `r kids$n$gender$Other %>% f` other; the cohort's breakdown of age and gender, after exclusions, is in SI Figure 1) representing `r kids$n$languages %>% f` native languages and `r kids$n$countries %>% f` countries (SI Tables 1 and 2).
+We opted to only analyze the precisely year-long age bands, excluding the participants who responded with "3 or under" and "17 or older" ($n$ = `r exclusions$age %>% f`) since these are harder to interpret (but see SI Text 1 for a supplementary analysis of these participants). We also excluded children whose parents indicated that they had assisted their child during the experiment ($n$ = `r exclusions$parentHelp %>% f`); children who indicated they had played the game previously ($n$ = `r exclusions$playedBefore %>% f`); children with known hearing impairments ($n$ = `r exclusions$hearing %>% f`); children who were missing data from the test phase ($n$ = `r exclusions$missing %>% f`); and children who had trials with responses faster than 100ms or slower than 10 seconds ($n$ = `r exclusions$rt %>% f`). While the exclusion criteria for response times were not preregistered, we note that the main findings replicate under a variety of alternative exclusion decisions, or when not excluding any trials at all.
 
-No compensation was given, reducing the likelihood that adults were posing as children, but as an additional check, we examined participants' response times during the study. Consistent with prior work showing that response time in perceptual and cognitive tasks decreases over the course of childhood [@Hale1990; @Kiselev2009], response times during the task decreased reliably as a function of age (*F*(1, `r mods$rt$age$df.residual %>% f`) = `r mods$rt$age$statistic %>% f`, *p* `r mods$rt$age$p.value %>% format_p()`, *R*^2^ `r mods$rt$age$r.squared %>% format_p()`; SI Figure 2). More generally, there is growing evidence that online and lab-based data collection produce similar results, with limited evidence for reduced reliability in online cohorts [@Germine2012; @Hartshorne2019].
+This left `r kids$n$total %>% f` participants for analysis (`r kids$n$gender$Male %>% f` male, `r kids$n$gender$Female %>% f` female, `r kids$n$gender$Other %>% f` other; the cohort's breakdown of age and gender, after exclusions, is in SI Figure 1). Participants reported speaking `r kids$n$languages %>% f` native languages and being located in `r kids$n$countries %>% f` countries (SI Tables 1 and 2). 
+
+Readers should note that the experiment itself was conducted in English (including both written and spoken/audible instructions), however. As such, despite the apparent diversity of countries of origin and native languages, these data should not be considered a representative sample of cultural or linguistic experiences, and is likely to be biased in certain ways (e.g., those with internet access who can speak English; see Discussion).
 
 ## Stimuli
 
-Song excerpts were drawn from the *Natural History of Song Discography* [@Mehr2019], a corpus of vocal music collected from 86 mostly small-scale societies, including hunter-gatherers, pastoralists, and subsistence farmers. Each song in the corpus was originally performed in one of four behavioral contexts: dance, healing, lullaby, and love. All recordings were selected on the basis of supporting ethnographic material, as opposed to the acoustic features of the songs [see: @Mehr2019; @Mehr2018a].
+Song excerpts were drawn from the *Natural History of Song Discography* [@Mehr2019], a corpus of vocal music collected from 86 mostly small-scale societies, including hunter-gatherers, pastoralists, and subsistence farmers. Each song in this corpus was originally performed in one of four behavioral contexts: dance, healing, lullaby, and love. All recordings were selected on the basis of supporting ethnographic material, as opposed to the acoustic features of the songs [see: @Mehr2018a; @Mehr2019].
 
 Because love songs were ambiguously detected in some prior work [@Mehr2018a], and given the difficulty of explaining this category to children, we omitted love songs from the experiment and studied only the remaining three contexts (dance, lullaby, and healing). This left 88 songs from `r length(unique((songs$culture))) %>% f` societies, sung in `r length(unique(NHS_languages$language)) %>% f` languages (SI Table 3) and originating from locations corresponding to `r length(unique(songs$country)) %>% f` countries (SI Figure 3).
 
-```{r fig1, fig.align = "center", fig.height = 7.5, fig.width = 12, out.extra = 'trim={0 2.5cm 0 2.5cm}, clip', fig.cap = "\\textbf{Figure 1 | Schematic of the test phase of the experiment.} Children participated in an online game, narrated by \\textit{Susie the Star}, whose instructions were spoken aloud and printed in speech bubbles on the screen. Parents helped their children get accustomed to the procedure, but were asked not to help during the test phase of the experiment. During testing (panels \\textbf{a-c}) children listened to a series of songs; after each one, \\textit{Susie} asked them to guess its behavioral context."}
-experiment_schematic <- readPNG(here("viz", "kfc_procedureSchematic.png"))
-plot.new()
-rasterImage(experiment_schematic,0,0,1,1)
+```{r fig1}
+#| fig.cap = "\\textbf{Figure 1.} Schematic of the test phase of the experiment. Children listened to the songs and indicated their responses in the context of an online game. \\textbf{a}, Parents guided their children's participation with the assistance of a progress bar, which indicated which portions of the experiment were intended to be for parents alone, parents and children together, or children alone. The progress bar was visible throughout the experiment. \\textbf{b}, The game was narrated by \\textit{Susie the Star}, an animated character whose instructions were spoken aloud and printed in speech bubbles on the screen. \\textbf{c}, During testing children listened to a series of songs. \\textbf{d}, After each song, \\textit{Susie} asked them to guess its behavioral context and indicate their response by clicking or tapping an image (with accompanying text)."
+knitr::include_graphics(here("viz", "figures", "fig1-1-mod.pdf"))
 ```
 
 ## Procedure
 
-Participants could use a computer, mobile phone, or tablet; they were encouraged to use a computer, however, for easier user interface navigation. A progress bar, displayed throughout the experiment, indicated the times when the child should be assisted by a parent and the times the child should not be assisted. A schematic of the procedure is in Figure 1.
+Participants could use a computer, mobile phone, or tablet; they were encouraged to use a computer, however, for easier user interface navigation. A schematic of the experiment is in Figure 1; it included a a progress bar, displayed throughout the experiment, which indicated the times when the child should be assisted by a parent and the times the child should not be assisted.
 
-Parents were instructed to begin the game without the child present, so that they could provide us with demographic information and become oriented to the interface. This information included whether the child had previously participated in the experiment; the child's age, gender, country of residence, native language, any known hearing impairments; and whether or not the child was wearing headphones. We also asked about the frequency with which the child was exposed to parental singing or recorded music in the home.
+Parents were instructed to begin the game without the child present, so that they could provide us with demographic information and become oriented to the interface. This information included whether the child had previously participated in the experiment; the child's age, gender, country of residence, native language, any known hearing impairments; and whether or not the child would complete the experiment while wearing headphones. We also asked about the frequency with which the child was exposed to parental singing or recorded music in the home.
 
-Parents then turned the experiment over to their children, who were guided by an animated character, "Susie the Star". Susie provided verbal encouragement to keep the children motivated; explained the task instructions, which were also presented visually (but the youngest children were likely unable to read them); and reminded the children of these instructions throughout the experiment. First, in a training phase, Susie played children a likely-to-be-familiar song (the "Happy Birthday" song) and asked them to identify what they thought it was used for, by selecting one of three choices: "singing for bath time", "singing for school assembly" or "singing for celebrating a birthday". Once children correctly identified the song's behavioral context, Susie then presented the three song categories that children would be tested on in the experiment (lullaby, "for putting a baby to sleep"; healing, "to make a sick person feel better"; dance, "singing for dancing"). An illustration accompanied each song category's description, to facilitate responses for children too young to read (see Figure 1).
+Parents then turned the experiment over to their children, who were guided by an animated character, "Susie the Star". Susie provided verbal encouragement to keep the children motivated; explained the task instructions, which were also presented visually (although many of the youngest children were likely unable to read them); and reminded the children of these instructions throughout the experiment. 
 
-Susie then played the children a counterbalanced set of six songs (two per song type) drawn randomly from the *Natural History of Song Discography* and presented in a random order. The excerpts were 14 seconds long and each played in its entirety before the child could advance. After each song, Susie asked "What do you think that song was for?" and children made a guess by clicking or tapping on a labeled illustration corresponding with the song type (see Figure 1). We also asked children to rate how much they liked the song, for use in a different study. Positive feedback was always given after each trial (e.g., "Good job!"), with an arbitrary number of "points" awarded (+20 points when correct and +15 points when incorrect).
+First, in a training phase, Susie played children a likely-to-be-familiar song (the "Happy Birthday" song) and asked them to identify what they thought it was used for, by selecting one of three choices: "singing for bath time", "singing for school assembly" or "singing for celebrating a birthday"; `r kids$training_acc %>% p0` of children did so correctly on the first try. 
 
-Last, parents answered debriefing questions. The questions confirmed whether the child had worn headphones during the experiment (if, at the beginning of the study, the parent had stated the child would wear headphones), if the parent had assisted the child during the training portion of the experiment, and if the parent had assisted the child during the test questions.
+Susie then explained the three song categories that children would be tested on in the experiment (lullaby, "for putting a baby to sleep"; healing, "to make a sick person feel better"; dance, "singing for dancing"). An illustration accompanied each song category's description, to facilitate responses for children too young to read (see Figure 1). Before proceeding to the test trials, we asked parents whether they felt their child understood the task; `r kids$understand %>% p0` responded in the affirmative and those that did not were required to repeat the training trials.
 
-## Pilot study and preregistration
+Susie then played the children a counterbalanced set of six songs (two per song type) drawn randomly from the *Natural History of Song Discography* and presented in a random order. The excerpts were 14 seconds long and each played in its entirety before the child could advance. After each song, Susie asked "What do you think that song was for?" and children made a guess by clicking or tapping on a labeled illustration corresponding with one of the three song types (see Figure 1; i.e., a three-response classification task). After they indicated their inference, we also asked children to rate how much they liked the song, for use in a different study. Positive feedback was always given after each trial (e.g., "Good job!"), with an arbitrary number of "points" awarded (+20 points when correct and +15 points when incorrect).
 
-We ran a pilot version of the experiment with 500 children (50 children in each age group, range 3-12; 221 male, 267 female, 12 other) to provide a dataset for exploratory analyses. Based on these data, and our broader theoretical interests motivated in the introduction section of this paper, we preregistered three confirmatory hypotheses to be tested in a larger sample (see the preregistration at <https://osf.io/56zne>): in the full cohort of children, accurate identification of behavioral contexts overall and in all three song types; a statistically significant but practically non-significant effect of age on accuracy ($R^{2} < .05$); small or null associations of musical exposure in the home on accuracy.
+Last, parents answered debriefing questions. The questions confirmed whether the child had worn headphones during the experiment (if, at the beginning of the study, the parent had stated the child would wear headphones), if the parent had assisted the child during the training portion of the experiment, and if the parent had assisted the child during the test questions (those who had were excluded from analyses; see Participants, above).
 
-We also pre-specified four other hypotheses that were not investigated in the exploratory sample. Two of these are studied in this paper: predicted correlations between children's intuitions about the songs and adults' intuitions [with a sample expanded from our previous study in @Mehr2019]; and a prediction that the musical features of the songs that are predictive of children's intuitions about them, within a given song type, will correspond with musical features previously identified as universally associated with that song type [from @Mehr2019]. We leave the remaining two hypotheses for future research.
+## Pilot studies and preregistration
+
+In designing the experiment, we first piloted the experiment in-person with four children (ages 6, 7, 9, and 10), to explore whether the procedure was well-explained and intuitive for chilren, and to observe potential parental interference. The children easily understood the task and did not elicit help from their parents; at times they *rejected* parental assistance (e.g., as if to say "I can do this on my own, mum").
+
+We continued by running a pilot version of the experiment with 500 children recruited online (50 children in each age group, range 3-12; 221 male, 267 female, 12 other) to provide a dataset for exploratory analyses. Based on these data, and our broader theoretical interests motivated in the introduction section of this paper, we preregistered three confirmatory hypotheses to be tested in a larger sample: (i) in the full cohort of children, accurate classification of behavioral contexts overall and in all three song types, including after adjusting for response bias via $d'$ analyses; (ii) a positive but modestly sized effect of age on accuracy ($R^{2} < .05$); and (iii) little to no effect of musical exposure in the home on accuracy.
+
+We also pre-specified four other hypotheses that were not investigated in the exploratory sample. Two of these are studied in this paper: (iv) predicted correlations between children's intuitions about the songs and adults' intuitions, using an expanded sample from a previous study of adults [@Mehr2019]; and (v) a prediction that the musical features of the songs that are predictive of children's intuitions about them, within a given song type, will correspond with musical features previously identified as universally associated with that song type [from @Mehr2019]. We leave the remaining two preregistered hypotheses for future research.
+
+The preregistration is available at <https://osf.io/56zne>.
+
+## Notes on the unmoderated citizen-science approach
+
+Most psychological studies of children are conducted in-person (e.g., in a laboratory or school) or in a moderated online setting (e.g., via videoconference). Our approach instead relies on an unmoderated, *citizen-science* approach. While this approach has the advantage of larger-scale, and often more diverse recruitment than in-person or moderated online studies [@Hilton2022; @LiSubmitted], it has two potential risks.
+
+### The risk of participant misrepresentation: Are the children really children?
+
+As we did not directly observe the participants, we cannot verify that participants in the study are, in fact, children, as opposed to adults posing as children, or malicious automated participants (e.g., bots). 
+
+As no compensation was given, it is not clear what incentive there would be for either possibility, and there is growing evidence that uncompensated online and compensated lab-based data collection produce similar results across a number of domains [@Huber2020; @Hartshorne2019; @Germine2012]. Nevertheless, we analyzed several forms of metadata to explore the risk of participant misrepresentation.
+
+First, we examined the timecourse of participant recruitment across the child and adult cohorts  (SI Figure 3). In particular, we inspected large spikes in recruitment, with the idea that spikes that are not explicable by known events could be attributable to bots or other malicious participants. All spikes in recruitment were attributable to known internet exposure such as viral news coverage, however, suggesting that increases in recruitment during these spikes corresponded with *bona fide* participants.
+
+Second, we compared the times of study completion across the child and adult cohorts across several countries (SI Figure 4). Children generally keep different schedules than do adults (e.g., most adults do not attend elementary school) and thus, presumably, would have different opportunities to participate in the experiment. We found that participants in the child cohort were less likely to participate in the late night/early morning, relative to adults, a pattern consistent across 5 countries with large samples in both children and adults. 
+
+Third, we examined the patterns of response times within the child cohort in the experiment (SI Figure 5). Consistent with prior work showing that response time in perceptual and cognitive tasks decreases over the course of childhood [@Hale1990; @Kiselev2009], response times during the task decreased reliably as a function of self-reported age (*F*(1, `r mods$rt$age$df.residual %>% f`) = `r mods$rt$age$statistic %>% r2`, *p* `r mods$rt$age$p.value %>% fp`, $R^{2}$ = `r mods$rt$age$r.squared %>% r2`; SI Figure 5).
+
+These considerations suggest that the risk of participant misrepresentation is limited.
+
+### The risk of parental non-compliance: Did parents bias children's responses?
+
+As we did not directly observe the participants, we cannot verify whether or not parents complied with the instructions to let their children participate uninterrupted and without providing advice or other interference. We believe this risk is mitigated by several concerns, however.
+
+First, we designed the experiment to be easy to understand, so as to limit the need for children to ask for help. We used clear, child-friendly visual and audio elements and interactive training trials to help the child intuitively understand the task; for the parents, we included a progress bar throughout to communicate when parents should and should not intervene. These are depicted in Figure 1 and should in principle limit parent intervention. Indeed, in in-person pilot participants, children did not elicit any help from parents, and even discouraged their parents from intervening (see Pilot studies and preregistration, above).
+
+Second, at the completion of the online experiment, we explicitly asked parents whether they complied with the request to not interfere with the child's performance. Post-hoc prompts on task compliance have been shown to be effective in other uncompensated online experiments [@Reinecke2015]; parents have little incentive to lie in response to such a question. The vast majority of parents stated that they did not assist their children in the experiment and we excluded those who did (see Participants, above).
+
+Third, even if parents *did* try to help their child, adult performance in the task reported here is far below ceiling [@Mehr2019]: parents would unlikely have been confident that they knew the answers themselves. 
+
+Fourth, the large sample size afforded by the unmoderated citizen-science approach can absorb considerable noise arising from violations to task compliance. It seems unlikely, for example, that the majority of parents (i.e., thousands of people) would have intentionally disregarded the clear instructions to not interfere. This is especially the case given one reward we did provide to parents: a few minutes of free time while their child was busy completing the experiment. As much of our cohort participated during the COVID-19 pandemic, when many parents had reduced childcare resources, we suspect that many parents welcomed the opportunity to *not* pay attention to their child's responses.
+
+These considerations suggest that the risk of parental non-compliance is limited.
 
 # Results
 
 ## Children's musical inferences are accurate
 
-Children accurately inferred the behavioral context of the songs they listened to at a rate significantly above chance level of 33.3% (Figure 2a; *M* = `r kids$correct$avg %>% percent(accuracy = 0.1)`, *SD* = `r kids$correct$sd %>% percent(accuracy = 0.1)`, *d'* = `r kids$d$group$avg %>% f`), as they did in exploratory results, and confirming the first preregistered hypothesis.
+Children accurately inferred the behavioral context of the songs they listened to at a rate significantly above chance level of 33.3%, both overall (Figure 2a; *M* = `r kids$correct$avg %>% p1`, *SD* = `r kids$correct$sd %>% p1`, *p* < .001) and within each song type (dance = `r kids$correct$dance %>% p1`; lullaby = `r kids$correct$lullaby %>% p1`; healing = `r kids$correct$healing %>% p1`; *p*s < .001), as they did in exploratory results, and confirming the first preregistered hypothesis.
 
-Notably, children did not use the three response options evenly: they guessed "dance" most frequently (`r kids$proportions$dance[2]`), followed by "healing" (`r kids$proportions$healing[2]`), and least often guessed "lullaby" (`r kids$proportions$lullaby[2]`). As such, we computed *d*-prime scores for each of the three song types for each of the participants, to assess discrimination independently from response bias. Dance songs were the most reliably discriminated (*d'* = `r mods$d$t.test$dance$estimate %>% f`, 95% *CI* [`r mods$d$t.test$dance$conf.int %>% f`], *t*(`r mods$d$t.test$dance$parameter`) = `r mods$d$t.test$dance$statistic %>% f`, *p* `r mods$d$t.test$dance$p.value %>% format_p()`, one-sample two-tailed t-test), followed closely by lullabies (*d'* = `r mods$d$t.test$lullaby$estimate %>% f`, 95% *CI* [`r mods$d$t.test$lullaby$conf.int %>% f`], *t*(`r mods$d$t.test$lullaby$parameter`) = `r mods$d$t.test$lullaby$statistic %>% f`, *p* `r mods$d$t.test$lullaby$p.value %>% format_p()`). Healing songs were the least reliably discriminated but still robustly above chance (*d'* = `r mods$d$t.test$healing$estimate %>% f`, 95% *CI* [`r mods$d$t.test$healing$conf.int %>% f`], *t*(`r mods$d$t.test$healing$parameter`) = `r mods$d$t.test$healing$statistic %>% f`, *p* `r mods$d$t.test$healing$p.value %>% format_p()`).
+However, children did not use the three response options evenly (SI Figure 6a): they guessed "dance" most frequently (`r kids$proportions$dance[2]`), followed by "healing" (`r kids$proportions$healing[2]`), and least often guessed "lullaby" (`r kids$proportions$lullaby[2]`). This is suggestive of a response bias, and as such, raw accuracy (i.e., percent correct) is difficult to interpret. 
 
-```{r fig2, fig.width = 5, fig.height = 3, fig.cap = "\\textbf{Figure 2 | Accurate identification of all three song types, cohort-wide and as a function of age.} (\\textbf{a}) Mean *d*-prime scores across all children show above-chance idenification of each song type, independant of their response bias. (\\textbf{b}) Accuracy increases only modestly from the youngest to the oldest children, and only for lullabies and dance songs. In both panels, the circles indicate mean *d*-prime scores and the error bars indicate the 95% confidence intervals. In panel \\textbf{b}, the three thick lines depict a linear regression for each song type and the shaded regions represent the 95% confidence intervals from each regression."}
+Thus, we also computed $d'$ scores to assess sensitivity to song function independently from response bias, doing so for the whole cohort, and for each age-group using a pooled estimator [@Macmillan1985\; see a simulation of the effect of this analytic choice in SI Figure 7]. Lullabies were the most reliably classified ($d'$ = `r mods$d$t.test$lullaby$estimate %>% r2`, 95% *CI* [`r mods$d$t.test$lullaby$conf.int %>% r2`], *t*(`r mods$d$t.test$lullaby$parameter %>% f`) = `r mods$d$t.test$lullaby$statistic %>% r2`, *p* `r mods$d$t.test$lullaby$p.value %>% fp`, *d* = `r kids$d$group$lullaby$cohen_d %>% r2`; one-sample two-tailed t-test), closely followed by dance songs ($d'$ = `r mods$d$t.test$dance$estimate %>% r2`, 95% *CI* [`r mods$d$t.test$dance$conf.int %>% r2`], *t*(`r mods$d$t.test$dance$parameter %>% f`) = `r mods$d$t.test$dance$statistic %>% r2`, *p* `r mods$d$t.test$dance$p.value %>% fp`, *d* = `r kids$d$group$dance$cohen_d %>% r2`). Healing songs were the least reliably classified but still robustly above chance ($d'$ = `r mods$d$t.test$healing$estimate %>% r2`, 95% *CI* [`r mods$d$t.test$healing$conf.int %>% r2`], *t*(`r mods$d$t.test$healing$parameter %>% f`) = `r mods$d$t.test$healing$statistic %>% r2`, *p* `r mods$d$t.test$healing$p.value %>% fp`, *d* = `r kids$d$group$healing$cohen_d %>% r2`). Estimated criterion scores are reported in SI Figure 6b.
 
-d_prime_pointrange <- ggplot(kids$d$avg$types, aes(y = mean_d_prime, x = factor(type, levels = c("dance", "lullaby", "healing")),
-                                 colour = factor(type, levels = c("dance", "lullaby", "healing" ))
-                     )) + # fill = as.factor(type, levels = c("healing",  "lullaby", "dance"))
-  geom_pointrange(aes(ymin = mean_d_prime - conf_95, ymax = mean_d_prime + conf_95), fatten = 5, size = .3,
-                  position = position_dodge(width = .3), alpha = .8) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_colour_manual(values = c("#619CFF", "#00BA38", "#F8766D"),
-                      name = "") +
-  scale_y_continuous(breaks = seq(0,1.1,1/5)) +
-  labs(x = "cohort mean", y = "Sensitivity (d')") +
-  coord_cartesian(ylim = c(0,1.1), clip = "off") +
-  theme_bw() +
-  theme(axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        legend.position = "none",
-        plot.margin = margin(0,20,0,0))
+This principal result was robust to the inclusion or exclusion of two subgroups of participants whose reported ages were ambiguous (SI Text 1) and was consistent across subgroups of participants with different native languages and locations (SI Text 2).
 
-d_prime_age_pointrange <- ggplot(kids$d$avg$ages, aes(x = age, y = mean_d_prime,
-                                 colour = factor(type, levels = c("dance",  "lullaby", "healing"))
-                     )) +
-  geom_smooth(method = "lm",
-              aes(group = type), alpha = .3, key_glyph = "pointrange") +
-  geom_pointrange(aes(ymin = mean_d_prime - conf_95, ymax = mean_d_prime + conf_95), fatten = 5, size = .3,
-                  position = position_dodge(width = .3), alpha = .8,
-                  key_glyph = "pointrange") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_x_continuous(breaks = seq(from = 1, to = 13, by = 1)) +
-  scale_colour_manual(values = c("#619CFF", "#00BA38","#F8766D"),
-                      name = "") +
-  labs(x = "age (years)", y = "") +
-  scale_y_continuous(breaks = seq(0,1.1,1/5)) +
-  coord_cartesian(ylim = c(0,1.1), clip = "off") +
-  theme_bw() +
-  theme(panel.grid.minor.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())
-
-fig2 <- d_prime_pointrange + d_prime_age_pointrange +
-  plot_annotation(tag_levels = "a") +
-  plot_layout(widths = c(1,3))
-
-fig2
-
+```{r fig2}
+#| fig.cap = "\\textbf{Figure 2 | Accurate classification of all three song types and cohort-wide, with no effect of age.} (\\textbf{a}) Mean *d*-prime scores across all children show above-chance classification of each song type, independent of their response bias. (\\textbf{b}) Above-chance sensitivity replicates for each age group, except for some of the healing song estimates whose 95% confidence-intervals crossed zero. Performance did not improve with age, either averaging across all song-types, or within dance, lullaby, or healing songs individually (ps > 0.05). In both panels, the circles indicate *d*-prime scores and the error bars indicate the 95% confidence intervals. In panel \\textbf{b}, the three thick lines depict a linear regression for each song type and the shaded regions represent the 95% confidence intervals from each regression."
+knitr::include_graphics(here("viz", "figures", "fig2-1.pdf"))
 ```
 
-## Musical inferences improve only slightly with age
+## Musical inferences did not appreciably improve with age
 
-To measure the degree to which these inferences change through development, we fit a simple linear regression predicting children's average accuracy from age, finding a small but significant effect (*F*(1, `r mods$accuracy$age$df.residual %>% f`) = `r mods$accuracy$age$statistic %>% f2`, *p* `r mods$accuracy$age$p.value %>% format_p()`, *R*^2^ `r mods$accuracy$age$r.squared %>% format_p()`), consistent with our exploratory analyses and preregistered hypothesis (i.e., a small, or practically non-significant increase in accuracy).
-
-As a more rigorous test, which was not preregistered, we ran a mixed-effects model on participant-wise *d*-prime scores, with random intercepts for participants and random intercepts and slopes for song types. In this model, the effect of age did not reach statistical significance (*F*(1, `r mods$d$lm$all$DenDF %>% f`) = `r mods$d$lm$all$statistic %>% f`, *p* `r mods$d$lm$all$p.value %>% format_p()`).
+To measure the degree to which these inferences change through development, we fit a simple linear regression predicting children's average accuracy from age.  While the effect of age was statistically significant, the effect size was miniscule (*F*(1, `r mods$accuracy$age$df.residual %>% f`) = `r mods$accuracy$age$statistic %>% r2`, *p* `r mods$accuracy$age$p.value %>% fp`, $R^2$ `r mods$accuracy$age$r.squared %>% fp`), confirming our second pre-registered hypothesis. In an exploratory analysis, we tested the effect of age on $d'$ scores (instead of raw accuracy); the effects were comparable, with no age effect overall or in any of the song types individually (*p*s > 0.05).
 
 ## Musical inferences are unrelated to children's home musical environment
 
-We tested the relation between parent-child musical interactions and children's musical inferences. Consistent with the preregistered hypothesis, we found no evidence for relations between *d*-prime scores and the frequency of parental singing (SI Figure 4a; *F*(1, `r mods$accuracy$singOften$df.residual %>% f`) = `r mods$accuracy$singOften$statistic %>%  f`, *p* `r mods$accuracy$singOften$p.value %>% format_p()`), or the frequency of recorded music (SI Figure 4b; *F*(1, `r mods$accuracy$playMusicOften$df.residual %>% f`) = `r mods$accuracy$playMusicOften$statistic %>% f`, *p* `r mods$accuracy$playMusicOften$p.value %>% format_p()`).
+We tested the relationship between the frequency of parent-child musical interactions (i.e., singing or playing recorded music) and children's musical inferences. Consistent with our third preregistered hypothesis, we found no evidence for a relationship between accuracy and the frequency of parental singing (SI Figure 8a; *F*(1, `r mods$accuracy$singOften$df.residual %>% f`) = `r mods$accuracy$singOften$statistic %>%  r2`, *p* `r mods$accuracy$singOften$p.value %>% fp`), or with the frequency of recorded music (SI Figure 8b; *F*(1, `r mods$accuracy$playMusicOften$df.residual %>% f`) = `r mods$accuracy$playMusicOften$statistic %>% r2`, *p* `r mods$accuracy$playMusicOften$p.value %>% fp`).
 
 ## Musical inferences are highly similar between children and adults
 
-With practically no change in accuracy from early childhood to early adolescence, might children's musical inferences be similar to those of adults? We used all available data from the "World Music Quiz" on <https://themusiclab.org>, a similar experiment for adults. Data were available from `r adults$n$total %>% f` participants who were older than 18 years old (`r adults$n$gender$Male %>% f` male, `r adults$n$gender$Female %>% f` female, `r adults$n$gender$Other %>% f` other, for `r adults$n$gender$not_reported %>% f` gender information was not available; mean age = `r adults$age$avg %>% round(1)`, SD = `r  adults$age$sd %>% round(1)`, range: `r adults$age$min`-`r adults$age$max`; n.b., a portion of these data were previously analyzed in @Mehr2019, but not in relation to children's performance on the task). For both adults and children, we computed the song-wise proportion of guesses for each song type (i.e., a measure of how strongly each song cued a given behavioral context) and then regressed these scores on each other.
+With no substantive change in accuracy from early childhood to early adolescence, might children's musical inferences be similar to those of adults? We used all available data from the "World Music Quiz" on <https://themusiclab.org>, a similar experiment for adults^[Note that a portion of these data were previously reported in Mehr and colleagues -@Mehr2019 but were not analyzed in relation to children's performance.] using the same general task design and stimuli (but with a fourth song type, "love songs", and response option, "used to express love to another person", neither of which were used in the children's experiment). Data were available from `r adults$n$total %>% f` participants who were older than 18 years (`r adults$n$gender$Male %>% f` male, `r adults$n$gender$Female %>% f` female, `r adults$n$gender$Other %>% f` other, `r adults$n$gender$not_reported %>% f` unknown/missing; mean age = `r adults$age$avg %>% r1` years, SD = `r  adults$age$sd %>% r1`, range: `r adults$age$min %>% f`-`r adults$age$max %>% f`\). We computed the song-wise proportion of guesses for each song type (i.e., a measure of how strongly each song cued a given behavioral context) within each cohort (i.e., children or adults) and regressed these scores on each other.
 
-In all cases, children's inferences were highly predictive of adults', with *R*^2^ values approaching 1 (Figure 3a-c; dance: *F*(1, `r mods$kfc_fc$dance$df.residual %>% f`) = `r mods$kfc_fc$dance$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$dance$r.squared %>% f`; lullaby: *F*(1, `r mods$kfc_fc$lullaby$df.residual %>% f`) = `r mods$kfc_fc$lullaby$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$lullaby$r.squared %>% f`; healing: *F*(1, `r mods$kfc_fc$healing$df.residual %>% f`) = `r mods$kfc_fc$healing$statistic %>% f`, *R*^2^ = `r mods$kfc_fc$healing$r.squared %>% f`; all *p* \<.001). This relationship was also robust when inferences were reduced from a continuous score to a discrete ranking of the songs by guessing percentage. We quantified the strength of this relationship using Kendall's rank correlation coefficient $\tau$: a more conservative, non-parametric measure of correlation. Again, there was a strong positive correlation between children's and adults' inferences for all song types (dance: $\tau$ = `r mods$tau$dance$estimate %>% round(3)`; lullaby: $\tau$ = `r mods$tau$lullaby$estimate %>% round(3)`; healing: $\tau$ = `r mods$tau$healing$estimate %>% round(3)`; all *p* \< .001).
+In all cases, children's inferences were highly predictive of adults', with $R^{2}$ values approaching 1 (Figure 3a-c; dance: *F*(1, `r mods$kfc_fc$dance$df.residual %>% f`) = `r mods$kfc_fc$dance$statistic %>% r2`, $R^{2}$ = `r mods$kfc_fc$dance$r.squared %>% r2`; lullaby: *F*(1, `r mods$kfc_fc$lullaby$df.residual %>% f`) = `r mods$kfc_fc$lullaby$statistic %>% r2`, $R^{2}$ = `r mods$kfc_fc$lullaby$r.squared %>% r2`; healing: *F*(1, `r mods$kfc_fc$healing$df.residual %>% f`) = `r mods$kfc_fc$healing$statistic %>% r2`, $R^{2}$ = `r mods$kfc_fc$healing$r.squared %>% r2`; *p*s \< .001), confirming our fourth pre-registered hypothesis. The strong relationship between the guesses of children and adults also held robustly across children of all ages and across the three song types, with uniformly high $R^{2}$ values and slight increases in $R^{2}$ through childhood (SI Figure 9).
 
-```{r fig3, fig.width = 9, fig.height = 6, fig.cap = "\\textbf{Figure 3 | Children and adults make similar musical inferences that are driven by the same acoustical features.} The scatterplots (\\textbf{a-c}) show the tight correlations between children's and adults' musical inferences. Each point represents average percent guesses that it was (\\textbf{a}) \"for dancing\"; (\\textbf{b}) \"for putting a baby to sleep\"; and (\\textbf{c}) \"to make a sick person feel better\"; the songs' \\textit{actual} behavioral contexts are color-coded, with dance songs in blue, lullabies in green, and healing songs in red. The lines depict simple linear regressions and the gray shaded areas show the 95\\% confidence intervals from each regression. The bar plots (\\textbf{d-f}) show the similar amounts of variance (partial-$R^{2}$) in childrens' (lighter bars) and adults' (darker bars) guesses that is explained by musical features selected via LASSO regularization, for each of the three song types, computed from multiple regressions."}
+In a more conservative, exploratory analysis, we transformed the measures of inferences from song-wise continuous scores (i.e., comparing the cohorts' proportions of responses for each song type) to song-wise rank scores (e.g., integers from "most-guessed to be a lullaby" to "least-guessed to be a lullaby"). We quantified the strength of these relationships using the non-parametric Kendall's rank correlation coefficient $\tau$ and found a strong positive correlation between children's and adults' inferences for all song types (dance: $\tau$ = `r mods$tau$dance$estimate %>% r2`; lullaby: $\tau$ = `r mods$tau$lullaby$estimate %>% r2`; healing: $\tau$ = `r mods$tau$healing$estimate %>% r2`; *p*s \< .001).
 
-KFC_FC_corr_plot <- function(type_x, color_x, y_show, x_show) {
-  ggplot(data = filter(guesses$by_type, guess == type_x), aes(x = FC*100, y = KFC*100)) +
-    geom_point(size = 2, aes(colour = factor(type)), alpha = .6) +
-    scale_colour_manual(values = c("#619CFF", "#F8766D", "#00BA38")) +
-    scale_x_continuous(limits = c(0,100)) +
-    scale_y_continuous(limits = c(0,100)) +
-    geom_smooth(method='lm', color = 'black') +
-    stat_cor(aes(label = ..rr.label..),
-      label.x = 0, label.y = 90, color = "black") + 
-    labs(title = str_to_title(paste("%", type_x, "guesses")),colour = "Song type",
-         x = ifelse(x_show, "Adults", ""), 
-         y = ifelse(y_show, "Kids", "")) +
-    theme(plot.title = element_text(color = color_x),
-          aspect.ratio=1, 
-          plot.margin = margin(0,4.5,0,0),
-          panel.grid.minor = element_blank()) +
-    coord_cartesian(clip = 'off')
-}
-
-# correlation scatter plots
-plots$corr$dance <- KFC_FC_corr_plot("dance", "#619CFF",1,1)
-plots$corr$lullaby <- KFC_FC_corr_plot("lullaby", "#00BA38",1,1)
-plots$corr$healing <- KFC_FC_corr_plot("healing", "#F8766D",1,1)
-
-# create feature plots showing R^2 for each feature
-for (type_x in c("dance", "lullaby", "healing")) {
-  # calculate R^2 for each feature in simple linear model
-  for (data_x in c("KFC", "FC")) {
-    for (feature_x in selected_features[[type_x]]) {
-      x <- reformulate(selected_features[[type_x]][selected_features[[type_x]] != feature_x], 
-                       response = paste(data_x, type_x, sep = "_"))
-      mods[[type_x]][[data_x]][[feature_x]] <- lm(x, data = songs) 
-      
-      mods[[type_x]][[data_x]][[feature_x]] <- rsq.partial(
-        mods$feature[[data_x]][[type_x]],
-        mods[[type_x]][[data_x]][[feature_x]]
-      )$partial.rsq %>% 
-        as_tibble() %>% 
-        mutate(feature = feature_x,
-               partial_r.squared = value) %>% 
-        select(-value)
-    }
-  }
-  # turn into a tidy long tibble 
-  mods$features[[type_x]] <- mods[[type_x]] %>% 
-  as_tibble() %>% 
-  pivot_longer(cols = c(KFC, FC), names_to = "participant", values_to = "data") %>% 
-  unnest() %>% 
-  mutate(feature = fct_reorder(feature, partial_r.squared))
-}
-
-
-# plot features ordered by size
-feature_plot <- function(type_x, labels) {
-  ggplot(mods$features[[type_x]],
-         aes(y = feature, x = partial_r.squared, fill = participant)) +
-    geom_col(position = "dodge") +
-    #coord_flip(ylim = c(0,.5)) +
-    labs(y = "", x = bquote("Partial R"^2)) + #, title = type_x
-    scale_fill_manual(values = case_when(
-      type_x == "dance" ~ c(darken("#619CFF", .3), "#619CFF"),
-      type_x == "lullaby" ~ c(darken("#00BA38", .3), "#00BA38"),
-      type_x == "healing" ~ c(darken("#F8766D", .3), "#F8766D")
-    )) +
-    scale_y_discrete(labels = labels) +
-    lims(x = c(0,.5)) +
-    theme(legend.position = "none",
-          aspect.ratio = 1,
-          panel.grid.minor = element_blank(),
-          axis.text = element_text(size = 8, color = "black"))
-}  
-
-plots$feature$dance <- feature_plot("dance", c("More Beat\nStability", "Faster\nTempo", "More\nAccentuation"))
-plots$feature$lullaby <- feature_plot("lullaby", c("Slower\nTempo", "Less\nAccentuation"))
-plots$feature$healing <- feature_plot("healing", c("More\nArpeggiation", "Major\nTonality",
-                                                   "Less\nSyncopation", "More\nModal Pitch",
-                                                   "More\nVibrato", "Slower\nTempo", "Less\nBeat Stability"))
-
-fig3 <- plots$corr$dance + plots$corr$lullaby + plots$corr$healing +
-  plots$feature$dance + plots$feature$lullaby + plots$feature$healing +
-  plot_layout(heights = 1) + plot_annotation(tag_levels = "a")
-
-fig3
-
+```{r fig3}
+#| fig.cap = "\\textbf{Figure 3 | Children and adults make highly similar musical inferences, which are driven by the same acoustical features.} The scatterplots (\\textbf{a-c}) show the tight correlations between children's and adults' musical inferences. Each point represents average percent guesses that it was (\\textbf{a}) \"for dancing\"; (\\textbf{b}) \"for putting a baby to sleep\"; and (\\textbf{c}) \"to make a sick person feel better\"; the songs' \\textit{actual} behavioral contexts are color-coded, with dance songs in blue, lullabies in green, and healing songs in red. The lines depict simple linear regressions and the gray shaded areas show the 95\\% confidence intervals from each regression. The bar plots (\\textbf{d-f}) show the similar amounts of variance (partial-$R^{2}$) in childrens' (lighter bars) and adults' (darker bars) guesses that is explained by musical features selected via LASSO regularization, for each of the three song types, computed from multiple regressions. The arrows beside each musical feature indicate the direction of effect, with green upwards arrows indicating increases (e.g., faster tempo) and red downward arrows indicating decreases (e.g., slower tempo)."
+knitr::include_graphics(here("viz", "figures", "fig3-1.pdf"))
 ```
 
-## Child and adult musical inferences are driven by the same musical features
+## Child and adult musical inferences are driven by the same acoustic correlates of musical function
 
-To investigate what might drive children's musical inferences, we analyzed which musical features were predictive of their guesses, within each song; and whether these musical features corresponded with those that were predictive of adults' guesses. We began with the set of 36 musical features (expert annotations and transcription variables) previously studied in @Mehr2019. To reduce overfitting, we selected variables via LASSO regularization [@Friedman2016].
+As a further test of the fourth preregistered hypothesis, we explored what might drive children's musical inferences. We analyzed which musical features were predictive of children's guesses, within each song, and asked whether these musical features corresponded with those that were predictive of adults' guesses. 
 
-The model was trained to predict the child and adult inferences for each song on the basis of the 36 musical features. The key hyperparameter of the model (lambda), which determines how many features are selected, was chosen on the basis of a 10-fold cross-validation procedure across random subsets of the data, repeated 100 times for each song function to maximize robustness. The model mean squared error was averaged over these iterations, and we selected the highest lambda value whose model error was within one standard error of the minimum. This procedure yielded a small number of musical features predictive of each song-type guess; we then discarded those with coefficients below an arbitrary threshold of 0.01, as a form of secondary regularization (to err on the side of analyzing a smaller set of features).
+We began with an initial set of 36 musical features (annotations from expert musicians and variables derived from transcriptions of the songs) that were previously studied in Mehr and colleagues [-@Mehr2019], which were z-scored to facilitate model fitting and comparison across features. To avoid overfitting, we then selected a smaller subset of the full 36 features via LASSO-regularized modeling [@Friedman2016], performed separately for each song type (dance, lullaby, healing) and for each population (child, adult). Each model predicted the naive listener inferences for each of the 88 songs, and was trained with 10-fold cross-validation, repeated 10 times for robustness. We then conservatively discarded resulting model coefficients below an arbitrary threshold of 0.02 as a form of secondary regularization (erring on the side of a simpler model; further minimize overfitting). 
 
-We then built multiple regression models predicting the percentage of song-wise guesses in each category from the selected musical features. For all three song types, these features explained substantial variability in listener inferences (dance: *F*(1, `r mods$feature$s$KFC$dance %>% pull(df.residual)`) = `r mods$feature$s$KFC$dance %>% pull(statistic) %>% f`, *p* `r mods$feature$s$KFC$dance %>% pull(p.value) %>% format_p`, $R^2$ = `r mods$feature$s$KFC$dance %>% pull(r.squared) %>% f`; lullaby: *F*(1, `r mods$feature$s$KFC$lullaby %>% pull(df.residual)`) = `r mods$feature$s$KFC$lullaby %>% pull(statistic) %>% f`, *p* `r mods$feature$KFC$lullaby %>% glance() %>% pull(p.value) %>% format_p`, $R^2$ = `r mods$feature$KFC$lullaby %>% glance() %>% pull(r.squared) %>% f`; healing: *F*(1, `r mods$feature$s$KFC$healing %>% pull(df.residual)`) = `r mods$feature$s$KFC$healing %>% pull(statistic) %>% f`, *p* `r mods$feature$KFC$healing %>% glance() %>% pull(p.value) %>% format_p`, $R^2$ = `r mods$feature$KFC$healing %>% glance() %>% pull(r.squared) %>% f`). An analysis of the partial $R^2$s from the models showed that the musical features explained comparable degrees of variability in guessing behavior between children and adults (Figure 3d-f; full regression reporting is in SI Tables 4-6). To estimate the degree of similarity, we pooled song-wise guessing percentages and tested whether a model that could differentiate child/adult was statistically equivalent to one that could not, using a chi-square test. Only the model for dance inferences showed a statistical difference between children and adults (dance: $\chi^2$ = `r mods$equiv$dance$rss %>% f`, *p* `r mods$equiv$dance$p.value %>% format_p()`; lullaby: $\chi^2$ = `r mods$equiv$lullaby$rss %>% f`, *p* `r mods$equiv$lullaby$p.value %>% format_p()`; healing: $\chi^2$ = `r mods$equiv$healing$rss %>% f`, *p* `r mods$equiv$healing$p.value %>% format_p()`).
+The results lay out the musical features that most highly influence children's and adults' inferences for each song type (SI Table 4; which also describes the features themselves). To quantify their influence, we regressed the percentage of song-wise guesses in each category on the LASSO-selected musical features. For all three song types, the features explained substantial variability in listener inferences (dance: *F*(1, `r mods$feature$s$KFC$dance %>% pull(df.residual) %>% f`) = `r mods$feature$s$KFC$dance %>% pull(statistic) %>% r2`, $R^2$ = `r mods$feature$s$KFC$dance %>% pull(r.squared) %>% r2`; lullaby: *F*(1, `r mods$feature$s$KFC$lullaby %>% pull(df.residual)`) = `r mods$feature$s$KFC$lullaby %>% pull(statistic) %>% r2`, $R^2$ = `r mods$feature$KFC$lullaby %>% glance() %>% pull(r.squared) %>% r2`; healing: *F*(1, `r mods$feature$s$KFC$healing %>% pull(df.residual)`) = `r mods$feature$s$KFC$healing %>% pull(statistic) %>% r2`, $R^2$ = `r mods$feature$KFC$healing %>% glance() %>% pull(r.squared) %>% r2`; *p*s < .001). 
+
+Notably, the partial $R^2$s from these models show that children's and adults' inferences, especially in the cases of lullabies and dance songs, were guided in a highly similar fashion: each musical feature explained a similar degree of variability in guessing behavior across the two cohorts (Figure 3d-f; full regression reporting is in SI Tables 5-7). Indeed, in a model predicting inferences from the LASSO-selected features for each song type, with a categorical variable for the cohort (children vs. adults), and interaction terms for each feature with cohort, children's and adults' inferences were not statistically distinguishable at the level of any musical feature (all interaction term $ps$ > 0.05).
+
+## Children's inferences are driven by objective acoustic correlates of musical function
+
+Previous work demonstrated that a core set of musical features reliably distinguished dance songs, lullabies, and healing songs from one another across 30 world regions [@Mehr2019]. In an exploratory test of our fifth preregistered hypothesis, we tested the degree to which chilren's inferences reflected these universal musical biases.
+
+We first trained a LASSO multinomial logistic classifier to infer song type from the acoustic features, trained with leave-one-out cross-validation at the level of world region. We then derived predictions for each song in the corpus such that the predictions for songs in a given world-region were based on information from only songs in other regions. This yielded groupings of three probabilities per song (e.g., for an ambiguous song, the model might predict [0.3 dance; 0.3 lullaby; 0.4 healing], whereas for a less ambiguous song, the model might predict [0.8 dance; 0.0 lullaby; 0.2 healing]). 
+
+We asked how similar these groupings were to the songwise guessing proportions derived from the children's responses. We found strong positive correlations for dance inferences (r = `r mods$KFC_multiLASSO_cor$dance$estimate %>% r2`) and lullaby inferences (r = `r mods$KFC_multiLASSO_cor$lullaby$estimate %>% r2`), and a moderate correlation for healing inferences (r = `r mods$KFC_multiLASSO_cor$healing$estimate %>% r2`). Thus, children's inferences, which, of course, are made without any explicit reference to acoustic features, were shaped by many of the same general acoustic features that objectively characterize song types across cultures.
+
+This was not the case across *all* musical features, however. In contrast to the model comparing children and adults (above), where the two cohorts' inferences could not be reliably distinguished on the basis of particular musical features (i.e., feature-by-cohort interaction terms were non-significant), we found some reliable differences in how the musical features operated worldwide and how they influenced children's inferences. 
+
+In a model predicting song-wise probabilities from the LASSO-selected features for each song type, with a categorical variable for the data type (children's inferences vs. objective classification), and interaction terms for each feature with data type, we found several statistically significant differences. For example, children were more likely to rate a song as "for dancing" when it had more rhythmic accentuation, faster tempo, greater metrical clarity, more duple rhythm, and shorter note durations, but in each case, children *over*-estimated their importance relative to the modeled objective differences (interaction *p*s < .05; see the full models in SI Tables 8-10). But the high degree of similarity between children's and adults' inferences suggests that the two groups make such errors in similar fashions, deviating from the features that reliably distinguish song types from one another worldwide.
 
 # Discussion
 
-We found that children make accurate inferences concerning the behavioral contexts of lullabies, dance songs, and healing songs. The songs were unfamiliar to the children, taken from a representative sample of vocal music from `r length(unique(songs$culture))` human societies, yet their guessing patterns were well above chance and strikingly similar to those of adults. While older children guessed more accurately than younger children, on average, this difference was very small, with the youngest children reaching near-adult levels of performance. Musical exposure in the home, from either recorded music or parental singing, was also unrelated to children's performance. Together, these results suggest that the ability to infer musical function from acoustical forms, at least in the contexts studied here, develops early and seemingly independently from musical experience.
+We found that children make accurate inferences concerning the behavioral contexts of unfamiliar foreign lullabies, dance songs, and healing songs. The songs were unfamiliar to the children and drawn from a representative sample of vocal music from `r length(unique(songs$culture))` human societies, but their guessing patterns were well above chance and strikingly similar to those of adults. Older children (teenagers) performed no better than the youngest chilren in our sample (age 4), who already performed at adult-like levels. Musical exposure in the home, from either recorded music or parental singing, was also unrelated to children's performance. These results suggest that the ability to infer musical function from acoustical forms, at least in the contexts studied here, develops early and requires minimal direct experience.
 
-The similarities in children's and adults' inferences were detectable even at the level of individual musical features of each song. For example, faster tempo, more stable beat structure, and more rhythmic accentuation, led listeners to guess that a song was used for dancing; less rhythmic accentuation and slower tempo cued listeners that a song was used as a lullaby; and songs with a slower tempo and less beat stability suggested that a song was used for healing. But across the board, these acoustical features were comparably predictive of both children's and adults' inferences, suggesting similar mechanisms.
+The similarities in children's and adults' inferences were detectable even at the level of individual musical features of each song. For example, faster tempo, more stable beat structure, and more rhythmic accentuation, led listeners to guess that a song was used for dancing; less rhythmic accentuation and slower tempo cued listeners that a song was used as a lullaby; and songs with a slower tempo and less beat stability suggested that a song was used for healing. Children's inferences were also robustly correlated with those of a classifier trained on the objective acoustic differences in the corpus, demonstrating a link between early perceptual intuitions and universal acoustic biases that shape human music production. This link, and the few cases where children's intuitions differed from universal biases, present an intriguing target for future research.
 
-What explains the associations between musical features and functional inferences? We speculate that they tie into the prototypical emotional and physiological content of songs' behavioral contexts. Across cultures, dance songs typically aim to increase arousal (e.g., energizing groups of people to dance) whereas lullabies aim to decrease it (e.g., soothing an infant) [@Mehr2019]. This is mirrored in the arousal-mediating effects of both rhythmic accentuation [@Schubert2004; @Ilie2006; @Weninger2013] and tempo [@Holbrook1990; @Balch1996; @Husain2002; @Yamamoto2007], consistent with the associations we observed here between functional inferences and musical features. Indeed, from a young age, infants are sensitive to arousal-mediating musical features [@Bainbridge2021; @Cirelli2019].
+What explains these robust associations between musical features and functional inferences? We speculate that they tie into the prototypical emotional and physiological content of songs' behavioral contexts. Across cultures, dance songs typically aim to increase arousal (e.g., energizing groups of people to dance) whereas lullabies aim to decrease it [e.g., soothing an infant: @Hilton2021a; @Mehr2019]. This is mirrored in the arousal-mediating effects of both rhythmic accentuation [@Weninger2013; @Ilie2006; @Schubert2004] and tempo [@Yamamoto2007; @Husain2002; @Balch1996; @Holbrook1990]. As in other universal acoustic form-function mappings [@Perlman2021; @Patten2018; @Fitch2002; @Fitch1997], this relationship may be grounded in the physics of sound production: the production of sounds with high tempo and accentuation, for example, requires more energy than does the production of slower, less accentuated sounds. These features are thus associated with higher arousal. Indeed, from a young age, infant arousal is reliably modulated by these features [@Bainbridge2021; @Cirelli2019].
 
-The degree of beat stability also was predictive of "used for dancing" inferences, which might be understood as relating to the sensorimotor coordination aspect of dancing: dancing involves the coordination of multiple bodies in time through sound (among other cues). A stable beat structure likely supports such coordination, supported by the psychological effects of "groove", an impulse for rhythmic body movement in response to music with high beat stability, fast tempos, more rhythmic accentuation, and a moderate amount of rhythmic complexity [@Janata2012; @Witek2014]. In both children and adults, we found that these features were all predictive of intuitions that a song was "used for dancing".
+Beat stability was also predictive of "used for dancing" inferences. Dancing characteristically involves temporal coordination, often between people and a perceived musical beat. As such, the more stable the beat, the more reliable it is as a cue to support temporal coordination. Children may naturally make this connection via the psychological effects of "groove", an impulse for rhythmic body movement in response to music with high beat stability, fast tempos, more rhythmic accentuation, and a moderate amount of rhythmic complexity [@Witek2014; @Janata2012]. In both children and adults, these features were the strongest predictors of "used for dancing" inferences, and there is some evidence that infants as young as 5 months share such impulses linking rhythmic musical features to movement [@Zentner2010].
 
-The acoustic correlates of healing songs are more difficult to interpret. Their traditional behavioral context is characterized by formal and religious activity across cultures [@Mehr2019], such as those found in shamanistic healing rituals [@Singh2018]. But these rituals often include dancing, and may thus constitute a fuzzier category than dance or lullaby; for example, among the children, the song most consistently categorized as a dance song (96% of the time) was, in fact, a healing song. Perhaps the wider variety of significant predictors of listener inferences, which include melodic arpeggiation and vibrato (but with generally lower partial $R^{2}$ values than in the other song types), underscores this fuzziness. These correlates are less obviously related to behavioral function (which, admittedly, is more ambiguous in the case of "making a sick person feel better" than the more straightforward case of "putting a baby to sleep"), so while music is reliably used in the context of healing in traditional societies [@Mehr2019], and has well-recognized potential in clinical settings [@Cheever2018], the mechanisms and acoustical correlates of such effects are not yet clear.
+The acoustic correlates of healing songs are more difficult to interpret. Their traditional behavioral context tends to be characterized by formal and religious activity across cultures [@Mehr2019], such as those found in shamanistic healing rituals [@Singh2018]. But these rituals sometimes include dancing, and may thus constitute a fuzzier and less distinct category than dance or lullaby; for example, among both children and adults, the song most consistently categorized as a dance song (96% of the time) was, in fact, a healing song. The weaker discriminability of healing songs by naive listeners, and the weaker correlations between human inferences and objective distinguishing features underscores this fuzziness. This fuzziness is also germane to the behavioral context of healing songs more broadly, since a person's health is rarely externally observable, unlike the relatively more concrete referents of babies sleeping and people dancing. Indeed, @Singh2018 argues that healing rituals often function in part to signal a healer's otherworldliness and ability to transact with unobserved spiritual causes of health. So while music appears universally in the context of healing [@Mehr2019; @Singh2018], and has well-recognized potential in modern clinical settings [@Cheever2018], the mechanisms and acoustical correlates of inferences about traditional healing songs are far less clear and require further study.
 
-Our findings suggest that at least some parts of higher-level music perception develop early, with only minimal musical experience, echoing the results of studies in infants, who show distinct physiological responses to lullabies, relative to non-lullabies [@Bainbridge2021]. Many music perception abilities appear to be precocial, including beat processing [@Zentner2010; @Winkler2009; @Phillips-Silver2005] that differ markedly from non-human primates [@Honing2018]; sensitivity to tonal structure in music [@Lynch1992]; rich memories of musical stimuli [@Granier-Deferre2011] that persist after long delays [@Mehr2016]; and early sensitivity to metrical [@Hannon2005] and tonal structures [@Lynch1990] typical of infants' native musical environment. The nature of human music perception --- including high-level, communicative inferences about form and function --- might therefore be similar to the perception of arousal signals in vocalizations across species [@Filippi2017; @Owren2001], contrasting with abilities that require extensive direct experience, such as those involved with learning a specific language or fluency in performing a specific style of music.
+Together, our findings suggest that some form-function inferences about music may be maturational rather than experiential in origin: requiring minimal direct experience to develop. Many other facets of music perception develop precocially in this way, including beat processing [@Zentner2010; @Winkler2009; @Phillips-Silver2005]; sensitivity to basic tonal structure [@Perani2010; @Lynch1992]; prenatally present attentional orientations to music [@Granier-Deferre2011]; biases for socially-relevant musical information [@Mehr2016; @Mehr2017]; and indeed, distinct physiological responses to lullabies, relative to non-lullabies [@Bainbridge2021]. Some of these abilities continue to develop with experience; for example, in the first year of life, the perception of metrical [@Hannon2005] and tonal [@Lynch1990] structures becomes tuned to regularities of the infants' native musical culture, and later stages of this can even continue past 12 years of age in ways that depend upon rich experiential input [@Brandt2012]. By contrast, the present findings show an adult-like competence as late as 4 years of age (and potentially earlier; see SI Text 1), irrespective of variation in musical exposure. 
 
-This is not to say that experience does *not* shape listeners' understanding of music: it obviously does, as evidenced by common sense and a variety of studies showing modest differences in the interpretation of musical structure across cultures [e.g., @Drake2003]. But our results support the view that musical meaning may build on innate signalling mechanisms not unlike those found in nonhuman vocalizations [e.g., those found in the contexts of infant care and territorial signaling; @Mehr2020]. On this idea, foundations for musical understanding come from the combination of acoustic predispositions, shared with other species; social experience, which plays a key role in early learning [@Baldwin1996; @Kinzler2007; @Liberman2017], including in music [@Mehr2016; @Mehr2017b; @Xiao2017]; and their interaction with related modalities, such as movement and emotion [@Sievers2013; @Sievers2019].
+This is not to say that experience does *not* shape listeners' understanding of music. Experience shapes many facets of musicality, from musical preferences [@Schellenberg2008b; @Peretz1998], to the enculturation of extramusical associations [@Margulis2022]. Experience can even exert subtle influences on our perception of basic structures of rhythm [@Drake2003] and pitch [@Jacoby2019]; the influences are not be limited to *musical* experience, as shown by the effect of linguistic experiences on music processing [@Liu2021]. And while we studied a relatively diverse sample of children and a highly diverse set of recordings (see SI Tables 1-3), we did not systematically sample diverse experiences: the study instructions were in English and the children were recruited via an English-language website. These limitations suggest a need for further studies conducted in multiple languages and recruiting from a wide variety of geographic regions, so as to better characterize the potential effects of early musical experience on listeners' understanding of music.
+
+Our results raise the possibility that some forms of musical meaning may not be entirely experience-dependent, building instead on instinctive signalling mechanisms, not unlike those thought to govern many nonhuman-animal vocalizations [@Mehr2021]. From this perspective, foundations for musical understanding come from the combination of acoustic predispositions, shared with other species [@Kamiloglu2020; @Filippi2017; @Owren2001]; human-unique social-cognitive skills and biases [@Herrmann2007], which play a key role in early learning [@Liberman2017; @Kinzler2007; @Baldwin1996], including in music [@Mehr2017b; @Xiao2017; @Mehr2016]; and their interaction with related modalities, such as movement and emotion [@Sievers2019; @Sievers2013].
 
 Thus, despite the variety of roles that music plays in our lives and the different meanings it can afford, shaped by culture and experience, the results reported here suggest that aspects of our musical intuitions are rooted in our biology. The psychology of music, like other acoustic predispositions, may develop as a natural component of the human mind.
 
-# Context
+# Context of the research
 
-This study builds on previous studies from our group [@Mehr2019; @Mehr2018a], demonstrating (a) cross-cultural regularities in the associations between acoustical forms of music and particular behavioral contexts in which music appears; and (b) the sensitivity of adults to these associations. Here, we explored how musical experience in childhood shapes that sensitivity, using the same stimuli as previous work. We also compared children's intuitions about music to adults' directly, and analyzed how these intuitions correlate with specific musical features (providing clues about the mechanisms underlying the main effects). The results complement those of another recent study [@Bainbridge2021], where infants showed differential physiological responses to unfamiliar foreign lullabies, relative to non-lullabies; those early-appearing, implicit responses to different forms of music, may help to explain children's high performance in identifying behavioral contexts for music. Together, these studies inform theories of the basic design features of a human psychology of music, including debates surrounding the biological foundations of music [@Mehr2020] and its relation to more general aspects of cognition [@Hilton2020].
+This research builds on previous studies from our group [@Mehr2019; @Mehr2018a; @Hilton2021a], demonstrating (a) cross-cultural regularities in the associations between acoustical forms of music and particular behavioral contexts in which music appears; and (b) the sensitivity of adults to these associations. Here, we explored how musical experience in childhood shapes that sensitivity, using the same stimuli as previous work. We also compared children's intuitions about music to adults' directly, and analyzed how these intuitions correlate with specific musical features (providing clues about the mechanisms underlying the main effects). The results complement those of another recent study [@Bainbridge2021], where infants showed differential physiological responses to unfamiliar foreign lullabies, relative to non-lullabies; those early-appearing, implicit responses to different forms of music, may help to explain children's high performance in classifying behavioral contexts for music. Together, these studies inform theories of the basic design features of a human psychology of music, including debates surrounding the biological foundations of music [@Mehr2020] and its relation to more general aspects of cognition [@Hilton2020].
 
 ### Acknowledgments
 
-We thank all the families who participated in this research; and C. Bainbridge, A. Bergson, M. Dresel, and J. Simson for assistance with designing and implementing the experiment; and L. Yurdum, who provided helpful comments on the manuscript.
+We thank all the families who participated in this research; C. Bainbridge, A. Bergson, M. Dresel, and J. Simson for assistance with designing and implementing the experiment; and L. Yurdum for helpful comments on the manuscript.
 
 ### Author contributions
 
-L.C-T., A.M., and S.A.M. designed the research. L.C-T. wrote code to implement the experiment. L.C-T. and S.A.M. collected the data. C.B.H., L.C-T., and R.Y. analyzed the data, with supervision from S.A.M. and A.M. S.A.M. and A.M. provided funding and other resources. C.B.H., L.C-T., and S.A.M. led the writing of the manuscript and all authors edited and approved it.
+- S.A.M. and A.M. conceived of the research and provided funding and other resources. 
+- L.C-T., A.M., and S.A.M. designed the experiment.
+- L.C-T. wrote code to implement the experiment, with contributions from S.A.M.
+- L.C-T., A.M., and S.A.M. piloted the experiment.
+- L.C-T., C.B.H., and S.A.M. collected the data. 
+- C.B.H. led analyses and designed the figures, with contributions from L.C-T., R.Y., A.M., and S.A.M.
+- C.B.H. and S.A.M. wrote the original manuscript, with contributions from L.C-T., R.Y., and A.M.
+- C.B.H. wrote the revision, with contributions from L.C-T and S.A.M., and all authors approved it.
+
+\newpage
+
+# Supplementary Information
+
+## SI Text 1. Analysis including participants aged "3 or younger" and "17 or older"
+
+In the main text, we excluded participants who reported their age in the ambiguous response categories of "3 or under" or "17 or older", as these spanned wider ranges of possible ages than the other, one-year response categories, complicating their interpretation. As this exclusion decision was not preregistered, for transparency we repeated the main analyses without excluding these two groups, so as to ensure that the post-hoc exclusion decision did not affect our conclusions. 
+
+It did not: accurate discrimination was robustly replicated within both "3 or under" (lullaby $d'$ = `r kids$d$supp_3$lullaby$d_prime %>% r2`, 95% *CI* [`r kids$d$supp_3$lullaby$conf.low %>% r2` `r kids$d$supp_3$lullaby$conf.high %>% r2`]; dance $d'$ = `r kids$d$supp_3$dance$d_prime %>% r2`, 95% *CI* [`r kids$d$supp_3$dance$conf.low %>% r2` `r kids$d$supp_3$dance$conf.high %>% r2`]; healing $d'$ = `r kids$d$supp_3$healing$d_prime %>% r2`, 95% *CI* [`r kids$d$supp_3$healing$conf.low %>% r2` `r kids$d$supp_3$healing$conf.high %>% r2`]) and "17 or older" (lullaby $d'$ = `r kids$d$supp_17$lullaby$d_prime %>% r2`, 95% *CI* [`r kids$d$supp_17$lullaby$conf.low %>% r2` `r kids$d$supp_17$lullaby$conf.high %>% r2`]; dance $d'$ = `r kids$d$supp_17$dance$d_prime %>% r2`, 95% *CI* [`r kids$d$supp_17$dance$conf.low %>% r2` `r kids$d$supp_17$dance$conf.high %>% r2`]; healing $d'$ = `r kids$d$supp_17$healing$d_prime %>% r2`, 95% *CI* [`r kids$d$supp_17$healing$conf.low %>% r2` `r kids$d$supp_17$healing$conf.high %>% r2`]). These findings raise the possibility that the ability to discriminate form and function in music may well extend to children younger than four years of age. 
+
+Other key findings reported in the main text, such as those concerning age effects, did not change substantively when including these two groups. For brevity, we did not repeat them here, but readers interested in exploring this question are welcome to use our open data and code to do so.
+
+## SI Text 2. Variation across countries, languages, and songs
+
+Because the instructions of the experiment were only presented in English, there could be differences in performance between children whose native language is English and children whose native language is not English. 
+
+We tested this question in two ways. First, we replicated the main $d'$ analyses using only data from English-speaking participants. The findings robustly replicated, with slightly lower scores (dance $d'$ = `r mods$d$lm$english_age$typedance$estimate %>% r2`; lullaby $d'$ = `r mods$d$lm$english_age$typelullaby$estimate %>% r2`; healing $d'$ = `r mods$d$lm$english_age$typehealing$estimate %>% r2`; *p*s < 0.05). The effect of age was not statistically significant for any of the song types (*p*s > 0.05). 
+
+Second, as a more general test of this issue, we measured the degree of variability across the `r kids$n$countries` countries of origin and the `r kids$n$languages` languages using coefficient of variation scores derived from a mixed-effects model predicting accuracy. In each case we found very little variation (`r mods$cv$country %>% r3` and `r mods$cv$language %>% r3`, respectively). To put these scores in context, the coefficient of variation for the 88 songs used in the experiment was `r mods$cv$song %>% r3` (i.e., ~10/20 times larger).
+
+Together, this suggests that the heterogeneity of our participants, and the varying degrees to which the children may have comprehended English, likely had a negligible influence on our results.
 
 \newpage
 
 # Supplementary Figures
 
-```{r ageDist, fig.cap = "\\textbf{Supplementary Figure 1.} The distributions of ages and genders of the participants."}
-
-# age distribution
-KFC_clean %>%
-  group_by(user_id, gender) %>%
-  summarise(age = mean(age)) %>%
-  group_by(age, gender) %>%
-  summarise(Freq = n()) %>%
-  arrange(desc(age)) %>%
-  ggplot(., aes(fill = gender, x = age, y = Freq)) +
-  geom_bar(stat = 'identity') +
-  labs(x = "Age (years)", y = "Number of participants", fill = "Gender") +
-  scale_x_continuous(breaks = seq(3, 12, by = 1)) +
-  scale_fill_discrete(name = "Gender") +
-  scale_fill_viridis_d() +
-  theme_bw() +
-  theme(panel.grid.minor.x = element_blank())
-
+```{r supplementary-fig1}
+#| fig.cap = "\\textbf{SI Figure 1.} The distributions of ages and genders of the participants."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig1-1.pdf"))
 ```
 
-```{r response-time-plot, fig.width = 6, fig.height = 4, fig.cap = "\\textbf{Supplementary Figure 2.} Children's response times, aggregated across all trials, as a function of age. Note that the $y$-axis is on a log scale."}
+\clearpage
 
-KFC_clean %>%
-  select(rt, age, user_id) %>%
-  filter(rt < 100000) %>%
-  mutate(rt = rt / 1000) %>%   # convert to units of seconds
-  ggplot(., aes(x = factor(age), y = rt)) +
-  geom_boxplot(outlier.shape = NA, fill = "grey90") +
-  geom_violin(alpha = 0.3, fill = "yellow") +
-  #geom_smooth(aes(x = as.numeric(age-2)), method = "lm", color = "red", size = 1) +
-  scale_y_log10() +
-  ylab("response time (s)") +
-  xlab("age (years)") +
-  theme_bw()
-
+```{r supplementary-fig2}
+#| fig.height = 4, fig.cap = "\\textbf{SI Figure 2.} The approximate locations of societies in which the \\textit{Natural History of Song Discography} recordings used in the experiment were originally recorded."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig2-1.pdf"))
 ```
 
-```{r alternative-map, fig.width = 6, fig.height = 4, fig.cap = "\\textbf{Supplementary Figure 3.} Locations of societies in which the \\textit{Natural History of Song Discography} recordings used in the experiment were originally recorded."}
+\clearpage
 
-# making dataset names match before merging
-countries <- kid_participants %>%
-  count(country) %>%
-  arrange(desc(n)) 
-
-# source: https://www.naturalearthdata.com/downloads/110m-cultural-vectors/
-world_map <- read_sf(here('data', "map_shapefiles/ne_110m_admin_0_countries.shp")) %>%
-  filter(ISO_A3 != "ATA") %>% # removing antartica
-  left_join(countries, by = c("NAME_LONG" = "country")) %>%
-  mutate(n = ifelse(is.na(n), 0,n))
-
-
-#scale_breaks = round(exp(seq(log(571), 0, length.out = 6)))
-
-dicog_map_sf <- discogMap %>%
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-
-colours <- c("#619CFF","#F8766D","#00BA38")
-
-ggplot() +
-  geom_sf(data = world_map, fill = "grey70") +
-  geom_point(data = dicog_map_sf, aes(color = as.factor(type),  geometry = geometry, fill = as.factor(type)), stat = "sf_coordinates", shape = 21) +
-  scale_color_manual(values = darken(colours, 0.3), name = "song type", guide = FALSE) +
-  scale_fill_manual(values = colours) +
-  coord_sf() +
-  theme_void() +
-  theme(legend.position = "bottom",
-        legend.title = element_blank())
-
+```{r supplementary-fig-3}
+#| fig.cap = "\\textbf{SI Figure 3.} The time-series of recruitment in children and adults. The histograms show the number of participants (after exclusion) that completed the experiments (the child version, top; or adult version, bottom) between 2019 and 2022. The date of participation is indicated on the \\textit{x}-axis. The annotations on each plot indicate specific events that coincided with spikes in participation, such as viral posts on social media, news coverage, etc. Other than these explicable spikes in participation, we see evidence of steady recruitment commensurate with all of our prior and current online experiments, suggesting that the participants were genuine, and not malicious entities (i.e., bots)."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig3-1.pdf"))
 ```
 
-```{r SI_fig4, fig.width = 6.5, fig.height = 4.5, fig.cap = "\\textbf{Supplementary Figure 4.} Children's accuracy of identifying songs was not related to their in-home musical experiences: across different levels of (\\textbf{a}) the frequency of parental singing and (\\textbf{b}) the frequency of recorded music listening, person-wise accuracy did not change. The thick lines represent medians; the boxes represent interquartile ranges; the lines represent ranges; and the shaded areas depict kernel density estimates."}
+\clearpage
 
-plots$parentSing <- KFC_clean %>% 
-  drop_na(singOften) %>% 
-  group_by(singOften, user_id) %>% 
-  summarise(avg = mean(correct),
-            sdev = sd(correct)) %>% 
-  ggplot(., aes(x = singOften, y = avg*100)) +
-  geom_boxplot(outlier.shape = NA, fill = "grey90") +
-  geom_violin(alpha = 0.3, fill = "orange") +
-  coord_cartesian(ylim = c(0,100)) +
-  labs(x = NULL, y = "personwise average \naccuracy (%)", title = "frequency of\n parental singing") +
-  coord_flip() +
-  theme_bw()
+```{r supplementary-fig-4}
+#| fig.cap = "\\textbf{SI Figure 4.} The timing of participation differs across children and adults across five high-recruitment countries. The polar histograms show the relative proportion of the cohort that participated at a particular time of day (on a 24-hour clock); the two shades differentiate an arbitrary threshold of 'day' versus 'late night/early morning' participation (see legend). The bar plots show the proportions between these two cutoffs in the data. The distributions of participation times differ markedly across the cohorts, with general consistency across countries within each cohort. This suggests that the participants who self-report being children are, in fact, children, as they are less likely to participate late at night. Note that four of the plotted countries have a single time zone; the United States data is aggregated across three time zones, but is included here as that country had the largest samples of  children and adults."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig4-1.pdf"))
+```
 
+\clearpage
 
-plots$recMusic <- KFC_clean %>% 
-  drop_na(playMusicOften) %>% 
-  group_by(playMusicOften, user_id) %>% 
-  summarise(avg = mean(correct),
-            sdev = sd(correct)) %>% 
-  ggplot(., aes(x = playMusicOften, y = avg*100)) +
-  geom_boxplot(outlier.shape = NA, fill = "grey90") +
-  geom_violin(alpha = 0.3, fill = "green") +
-  coord_cartesian(ylim = c(0,100)) +
-  labs(x = NULL, y = "personwise average \naccuracy (%)", title = "frequency of \nrecorded music") +
-  coord_flip() +
-  theme_bw()
+```{r supplementary-fig5}
+#| fig.cap = "\\textbf{SI Figure 5.} Children's response times, aggregated across all trials, as a function of age. Response times were comparable across song types. Note that the $y$-axis is on a log scale."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig5-1.pdf"))
+```
 
-plots$parentSing + plots$recMusic + plot_annotation(tag_levels = "a")
+\clearpage
 
+```{r supplementary-fig6}
+#| fig.cap = "\\textbf{SI Figure 6.} Response biases and criterion scores for the children were stable across ages. \\textbf{(a)} The stacked-bar graphs represent the proportion of responses for each of the three song categories over age. The colors of the bars represent the response types; evidently, they were not evenly used. \\textbf{(b)} We estimated criterion values for each age group, where higher criterion denotes more conservative guessing and lower criterion values denote more liberal guessing. The circles represent the criterion estimates; the lines depict a linear regression for each song type; and the shaded regions represent the 95% confidence intervals from each regression. None of the regressions were statistically significant (ps > 0.05). Participants required the strongest evidence to make a lullaby guess and required the least evidence to make a dance guess."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig6-1.pdf"))
+```
+
+\clearpage
+
+```{r supplementary-fig-7, fig.align = "center", out.extra = 'trim={0 2.5cm 0 2.5cm}, clip', }
+#| fig.cap = "\\textbf{SI Figure 7.} A simulation shows that the pooled d-prime provides a less biased estimate of sensitivity than does an average of participant-level d-prime estimates. The typical approach for calculating cohort-level sensitivity is to first calculate d-prime scores for each participant, and then take their average. However, our experiment had a small number of trials per participant (in part because young children have short attention spans); this meant that there were limited numbers of signal and noise trials for each participant, rendering the participant-level estimates difficult to interpret. In cases like these, Macmillan \\& Kaplan (1985) advocate for a collapsed/pooled d-prime approach. To test whether our particularly large sample size (\\textasciitilde 5000 children) would compensate for the deficiencies of sparse within-subject sampling, we ran a simulation to test whether averaged d-prime or pooled d-prime would be optimal. The simulation used the same number of participants in our study and simulated the ability of each approach to estimate a true effect size over a range of within-subject trial counts. The two plots show the estimated size of error in each method (on the $y$-axes), at differing numbers of signal trials per participant (on the $x$-axes). The results show that the averaging d-prime approach underestimates the true effect by \\textasciitilde 20\\%, and the pooled approach is unbiased. We therefore opted to use the pooled d-prime approach in the main analyses."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig7-1.pdf"))
+```
+
+\clearpage
+
+```{r supplementary-fig8}
+#| fig.cap = "\\textbf{SI Figure 8.} Children's accuracy of classifying songs was not related to their in-home musical experiences: across different levels of (\\textbf{a}) the frequency of parental singing and (\\textbf{b}) the frequency of recorded music listening, person-wise accuracy did not change. The thick lines represent medians; the boxes represent interquartile ranges; the lines represent ranges; and the shaded areas depict kernel density estimates."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig8-1.pdf"))
+```
+
+\clearpage
+
+```{r supplementary-fig9}
+#| fig.cap = "\\textbf{SI Figure 9.} The similarity between between children's and adult's inferences is high and modestly increases through childhood. We measured the similarity between children's and adult's inferences as the proportion of variance explained (R^2^) by regressing the average song-wise inferences of children on the adults, for each of the 13 yearlong age bins. We then constructed a regression model that predicted these R^2^ values from the interaction between the guessed category for each song and age of the children, producing the regression lines shown in the figure for each response type (dance, lullaby, or healing song). The shaded areas representing 95% confidence interval and the points representing the raw values. The main effect of age was statistically significant (p < 0.001) but the interaction of age with song-type was not (p = 0.09)."
+knitr::include_graphics(here("viz", "figures", "supplementary-fig9-1.pdf"))
+
+# Code for the in-caption stats:
+# mod <- lm(KFC_FC_correlation ~ 0 + age*response, 
+#    data = kids$corr$wFC %>% 
+#      mutate(response = str_to_title(response)))
+# 
+# anova(mod)
+# 
+# car::linearHypothesis(mod, "age:responseHealing - age:responseLullaby = 0")
 ```
 
 \clearpage
 
 # Supplementary Tables
 
+
 ```{r SI_table1, results = "asis"}
 
 kid_participants %>%   
   drop_na(language) %>% 
-  mutate(language = fct_lump_min(language, min = 20, other_level = "Languages with < 20 participants")) %>% 
   count(language) %>%
   arrange(desc(n)) %>% 
-  kbl(., longtable = TRUE, booktabs = TRUE, linesep = "") %>% # label = "tab: SI tab", caption = "Languages spoken by children",
+  slice(1:30) %>% 
+  bind_cols(., 
+            adult_covariates %>%   
+              drop_na(language) %>% 
+              count(language) %>%
+              arrange(desc(n)) %>% 
+              filter(language != "CONFLICTING_ANSWERS") %>% 
+              slice(1:30)) %>% 
+  mutate(across(where(is.numeric), ~ format(.x, big.mark = ","))) %>% 
+  kbl(.,
+      longtable = TRUE,
+      booktabs = TRUE,
+      escape = FALSE,
+      col.names = c("Language", "$n$", "Language", "$n$"),
+      linesep = ""
+      ) %>% # label = "tab: SI tab", caption = "Languages spoken by children",
   kable_paper(full_width = FALSE) %>% 
-  footnote(general = "Languages spoken by children",
-           general_title = "Supplementary Table 1",
+  add_header_above(c("Children" = 2, "Adults" = 2)) %>%
+  footnote(general = "The native languages of participants, reported in the child and adult cohorts. For brevity, only the 30 most-commonly reported languages are displayed here.",
+           general_title = "SI Table 1",
            title_format = "bold",
            footnote_as_chunk = TRUE,
            threeparttable = TRUE) %>% 
-  column_spec(1, width = "15em") %>% 
-  column_spec(2, width = "2em")
+  column_spec(c(1,3), width = "15em") %>% 
+  column_spec(c(2,4), width = "2em")
 
 ```
 
-```{r SI_table2}
+\clearpage
+
+```{r SI_table2, results='asis'}
+
 kid_participants %>%
-  mutate(country = fct_lump_min(country, min = 20, other_level = "Countries with < 20 participants")) %>% 
   count(country) %>%
   arrange(desc(n))  %>%         
-  drop_na() %>%
-  kbl(., longtable = TRUE, booktabs = TRUE, linesep = "") %>%
+  drop_na()%>% 
+  slice(1:30) %>% 
+  bind_cols(., 
+            adult_covariates %>%   
+              drop_na(country) %>% 
+              count(country) %>%
+              arrange(desc(n)) %>% 
+              filter(country != "CONFLICTING_ANSWERS") %>% 
+              slice(1:30)) %>% 
+  mutate(across(where(is.numeric), ~ format(.x, big.mark = ","))) %>% 
+  kbl(.,
+      longtable = TRUE,
+      booktabs = TRUE,
+      escape = FALSE,
+      col.names = c("Country", "$n$", "Country", "$n$"),
+      linesep = ""
+      ) %>% # label = "tab: SI tab", caption = "Languages spoken by children",
   kable_paper(full_width = FALSE) %>% 
-  footnote(general = "Countries of children",
-           general_title = "Supplementary Table 2",
+  add_header_above(c("Children" = 2, "Adults" = 2)) %>%
+  footnote(general = "The countries where participants were located, reported in the child and adult cohorts. For brevity, only the 30 most-commonly reported countries are displayed here.",
+           general_title = "SI Table 2",
            title_format = "bold",
            footnote_as_chunk = TRUE,
            threeparttable = TRUE) %>% 
-  column_spec(1, width = "15em") %>% 
-  column_spec(2, width = "2em")
+  column_spec(c(1,3), width = "15em") %>% 
+  column_spec(c(2,4), width = "2em")
+
 ```
 
 \clearpage
@@ -832,75 +559,200 @@ songs %>%
   mutate(song = row_number()) %>% 
   rename_with(~str_to_title(.), everything()) %>% 
   rename(`Modern-Day Country` = Country) %>% 
-  kbl(., longtable = TRUE, booktabs = TRUE, linesep = "") %>% 
-  kable_styling(latex_options = c("repeat_header")) %>% 
-  footnote(general = "Information about the song stimuli",
-           general_title = "Supplementary Table 3",
+  kbl(., 
+      col.names = c("Song ID", "Type", "Society", "Country (present-day)", "Language"),
+      longtable = TRUE, booktabs = TRUE, linesep = "", align = "l") %>% 
+  kable_styling(latex_options = c("repeat_header"),
+                font_size = 7) %>% 
+  footnote(general = "Summary information about the songs chilren heard.",
+           general_title = "SI Table 3",
            title_format = "bold",
            footnote_as_chunk = TRUE,
            threeparttable = TRUE) %>% 
-  column_spec(1, width = "2em") %>% 
-  column_spec(2, width = "4em") %>% 
-  column_spec(3, width = "8em") %>% 
-  column_spec(4, width = "12em") %>%
-  column_spec(5, width = "12em")
+  column_spec(1, width = "0.3in") %>% 
+  column_spec(2, width = "0.6in") %>% 
+  column_spec(3, width = "1.4in") %>% 
+  column_spec(4, width = "1.8in") %>%
+  column_spec(5, width = "1.4in")
 
 ```
 
-```{r SI_tables3-5, fig.height=10, fig.width=12,  results='asis'}
 
-# Function for creating regression tables to compare adults and kids
-regression_table <- function(child_mod, adult_mod, terms, tab_info, tab_num) {
-
-  child_mod_clean <- child_mod %>%
-    tidy() %>% 
-    mutate(p.value = scales::pvalue(p.value),
-      term = terms)
-
-  adult_mod_clean <- adult_mod %>%
-    tidy() %>% 
-    mutate(p.value = scales::pvalue(p.value),
-      term = terms) %>%
-    select(-term) %>%
-    dplyr::rename(estimate_adult = estimate, std.error_adult = std.error,
-                  statistic_adult = statistic, p.value_adult = p.value)
-
-  cbind(child_mod_clean,adult_mod_clean) %>%
-    mutate(
-      p.value = cell_spec(p.value, bold = ifelse(p.value < 0.05, TRUE, FALSE), format = "latex"),
-      p.value_adult = cell_spec(p.value_adult, bold = ifelse(p.value_adult < 0.05, TRUE, FALSE), format = "latex")) %>%
-    kbl(booktabs = TRUE,
-      col.names = c("Predictor", "$\\beta$", "SE", "t", "p","$\\beta$", "SE", "t", "p"),
-      digits = c(0, 3, 3, 3, 3, 3, 3, 3, 3),
-      align = c("l", "r", "r", "r", "r","r", "r", "r", "r"),
-      escape = FALSE
-    ) %>%
-    add_header_above(c(" ", "Kids" = 4, "Adults" = 4)) %>%
-    kable_styling(latex_options = c("striped", "scale_down")) %>% 
-    footnote(general = tab_info,
-           general_title = paste("Supplementary Table", tab_num),
-           title_format = "bold",
-           footnote_as_chunk = TRUE,
-           threeparttable = TRUE)
-}
-
-regression_table(mods$feature$KFC$dance, mods$feature$FC$dance,
-                 c("Intercept", "Accent", "Tempo", "Macrometer stability"),
-                 "Correlates of dance inferences", "4")
-
-regression_table(mods$feature$KFC$lullaby, mods$feature$FC$lullaby, 
-                 c("Intercept", "Accent", "Tempo"),
-                 "Correlates of lullaby inferences", "5")
-
-regression_table(mods$feature$KFC$healing, mods$feature$FC$healing,
-                 c("Intercept", "Macrometer stability", "Tempo", "Maj(-)/min(+) tonality", "Arpeggiation", "Syncopation", "Vibrato", "Modal Pitch Class"),
-                 "Correlates of healing inferences", "6")
-
-
-```
-
-```{=tex}
 \newpage
 \clearpage
+
+```{r supplementary-table-4, results='asis'}
+
+read_csv(here("data", "musical-feature-definitions-table.csv")) %>% 
+  kable(.,
+        format = "latex",
+        booktabs = TRUE,
+        escape = FALSE,
+        linesep = "\\addlinespace",
+        longtable = TRUE,
+        align=rep('l', 2)) %>%
+  kable_styling(font_size = 7,
+                full_width = FALSE) %>%
+  footnote(general = "Musical features selected by LASSO procedure. The features were derived from either \\\\textit{Transcription} or \\\\textit{Expert Annotation} datasets from Mehr et al. (2019). The \`\`Selection\" column denotes which of the three song types the feature was selected for. The \`\`Scoring\" column denotes the original scale of the feature score (note, however, that all features were z-scored in the analysis).",
+           general_title = "SI Table 4",
+           footnote_as_chunk = TRUE,
+           title_format = "bold",
+           escape = FALSE,
+           threeparttable = TRUE) %>%
+  column_spec(1:3, width = "0.7in") %>%
+  column_spec(4, width = "2.6in") %>% 
+  column_spec(5, width = "0.9in")
+
 ```
+
+\clearpage
+
+```{r SI_tables5-7, fig.height=10, fig.width=12,  results='asis'}
+
+regression_table <- function(data, terms, table_caption, table_number) {
+  cbind(data %>% filter(!str_detect(term, "KFC_")),
+        data %>% filter(str_detect(term, "KFC_")) %>% select(-term) %>% rename_with( ~ paste0(.x, "2"))) %>% 
+    mutate(
+      p.value = scales::pvalue(p.value),
+      p.value2 = scales::pvalue(p.value2),
+      term = terms
+    ) %>% 
+    mutate(p.value = cell_spec(p.value, bold = ifelse(p.value < 0.05, TRUE, FALSE), format = "latex"),
+           p.value2 = cell_spec(p.value2, bold = ifelse(p.value2 < 0.05, TRUE, FALSE), format = "latex")) %>%
+    kbl(booktabs = TRUE,
+        col.names = c("Predictor", "$\\beta$", "SE", "t", "p", "$\\beta$", "SE", "t", "p"),
+        digits = c(0, 3, 3, 3, 3, 3, 3, 3, 3),
+        align = c("l", "r", "r", "r", "r", "r", "r", "r", "r"),
+        linesep = "",
+        escape = FALSE
+    ) %>%
+    add_header_above(c(" ", "Children" = 4, "Adults (relative to Children)" = 4)) %>% 
+    kable_styling(font_size = 9) %>% # latex_options = c("striped"),
+    footnote(general = table_caption,
+             general_title = paste("SI Table", table_number),
+             title_format = "bold",
+             footnote_as_chunk = TRUE,
+             threeparttable = TRUE) %>% 
+    column_spec(1, width = "12em") %>% 
+    column_spec(2:4, width = "3.2em") %>% 
+    column_spec(5, width = "4.5em") %>% 
+    column_spec(6:8, width = "3.2em") %>% 
+    column_spec(9, width = "4.5em")
+}
+
+regression_table(mods$equiv$full$dance, 
+                  c(
+                    "Intercept",
+                    "Accentuation",
+                    "Tempo",
+                    "Metrical clarity",
+                    "Duple rhythm",
+                    "Note duration"
+                  ),
+                  "Musical features influencing children's \`\`dance\" guesses, compared to those of adults. The LASSO-selected correlates for children are listed on the left side of the table; those of adults are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). No musical features show a significant difference between children and adults, indicating that the two groups' inferences are guided similarly by the musical features studied here.",
+                  5)
+
+
+regression_table(mods$equiv$full$lullaby, 
+                  c("Intercept", "Accentuation", "Melodic simplicity", "Tempo", "Note duration", "Maj(-)/min(+) tonality",
+                   "Ornamentation", "Intervallic distinctiveness", "Note density", "Metrical clarity", "Vibrato",
+                   "Duple rhythm"),
+                  "Musical features influencing children's \`\`lullaby\" guesses, compared to those of adults. The LASSO-selected correlates for children are listed on the left side of the table; those of adults are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). No musical features show a significant difference between children and adults, indicating that the two groups' inferences are guided similarly by the musical features studied here.",
+                  6)
+
+
+regression_table(mods$equiv$full$healing, 
+                  c("Intercept", "Metrical clarity", "Tempo", "Maj(-)/min(+) tonality", "Syncopation", "Vibrato", "Melodic simplicity"),
+                  "Musical features influencing children's \`\`healing\" guesses, compared to those of adults. The LASSO-selected correlates for children are listed on the left side of the table; those of adults are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). No musical features show a significant difference between children and adults, indicating that the two groups' inferences are guided similarly by the musical features studied here.",
+                  7)
+
+
+```
+
+\newpage
+\clearpage
+
+```{r supplementary-table-8, results='asis'}
+
+regression_table2 <- function(data, terms, table_caption, table_number) {
+  cbind(data %>% filter(!str_detect(term, "pred_")),
+        data %>% filter(str_detect(term, "pred_")) %>% select(-term) %>% rename_with( ~ paste0(.x, "2"))) %>% 
+    mutate(
+      p.value = scales::pvalue(p.value),
+      p.value2 = scales::pvalue(p.value2),
+      term = terms
+    ) %>% 
+    mutate(p.value = cell_spec(p.value, bold = ifelse(p.value < 0.05, TRUE, FALSE), format = "latex"),
+           p.value2 = cell_spec(p.value2, bold = ifelse(p.value2 < 0.05, TRUE, FALSE), format = "latex")) %>%
+    kbl(booktabs = TRUE,
+        col.names = c("Predictor", "$\\beta$", "SE", "t", "p", "$\\beta$", "SE", "t", "p"),
+        digits = c(0, 3, 3, 3, 3, 3, 3, 3, 3),
+        align = c("l", "r", "r", "r", "r", "r", "r", "r", "r"),
+        linesep = "",
+        escape = FALSE
+    ) %>%
+    add_header_above(c(" ", "Children" = 4, "Objective (relative to Children)" = 4)) %>% 
+    kable_styling(font_size = 9) %>% # latex_options = c("striped"),
+    footnote(general = table_caption,
+             general_title = paste("SI Table", table_number),
+             title_format = "bold",
+             footnote_as_chunk = TRUE,
+             threeparttable = TRUE) %>% 
+    column_spec(1, width = "12em") %>% 
+    column_spec(2:4, width = "3.2em") %>% 
+    column_spec(5, width = "4.5em") %>% 
+    column_spec(6:8, width = "3.2em") %>% 
+    column_spec(9, width = "4.5em")
+}
+
+# dance
+regression_table2(mods$equiv2$full$dance, 
+                  c(
+                    "Intercept",
+                    "Accentuation",
+                    "Tempo",
+                    "Metrical clarity",
+                    "Duple rhythm",
+                    "Note duration"
+                  ),
+                  "Musical features influencing children's \`\`dance\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, chilren's intuitions (erroneously) deviate from the objective differences between song types.",
+                  8)
+# lullaby
+regression_table2(mods$equiv2$full$lullaby, 
+                  c(
+                    "Intercept",
+                    "Accentuation",
+                    "Melodic simplicity",
+                    "Tempo",
+                    "Note duration",
+                    "Maj(-)/min(+) tonality",
+                    "Melodic ornamentation",
+                    "Intervallic distinctiveness",
+                    "Note density",
+                    "Metrical clarity",
+                    "Vibrato",
+                    "Duple meter"
+                  ),
+                  "Musical features influencing children's \`\`lullaby\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, chilren's intuitions (erroneously) deviate from the objective differences between song types.",
+                  9)
+
+# healing
+regression_table2(mods$equiv2$full$healing, 
+                  c(
+                    "Intercept",
+                    "Metrical clarity",
+                    "Tempo",
+                    "Maj(-)/min(+) tonality",
+                    "Sycopation",
+                    "Vibrato",
+                    "Melodic simplicity"
+                  ),
+                  "Musical features influencing children's \`\`healing\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, chilren's intuitions (erroneously) deviate from the objective differences between song types.",
+                  10)
+
+```
+
+\newpage
+\clearpage
+
 # References

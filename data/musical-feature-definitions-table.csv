@@ -1,0 +1,13 @@
+Feature,Type,Selection,Definition,Scoring
+Accent,Expert Annotation,"Dance, Lullaby","The differentiation of musical pulses, usually by volume or emphasis of articulation. A fluid, gentle song will have few accents and a correspondingly low value.","""none"" (0); ""a little"" (0.5); or ""a lot"" (1)."
+Tempo,Expert Annotation,"Dance, Lullaby, Healing","The rate of salient rhythmic pulses (measured by having annotators tap the beat), adjusted to correspond with 'quarter note' equivalent; measured in beats per minute; the perceived speed of the music. A fast song will have a high value.", range: 61-205
+Metrical stability,Expert Annotation,"Dance Lullaby, Healing",The perceived clarity of the metrical rhythmic structure (groupings of perceived strong and weak beats).,"Scale from 1 - 6, ranging from ""No macrometer"" (1) to ""Totally clear macrometer"" (6)"
+Melodic simplicity,Transcription,"Lullaby, Healing","Variety versus monotony of the melody, measured as the proportion of notes in the transcription corresponding to the most common pitch-class.",range: 0.15 - 1
+Vibrato,Expert Annotation,"Lullaby, Healing","Presence of vibrato in the singing. Vibrato is a rapid, slight oscillation in pitch that is typically perceived as adding intensity.","""not present"" (0); ""present"" (1)"
+Syncopation,Expert Annotation,Healing,"The degree of of syncopation in the song (roughly equateable with 'rhythmic complexity'). Syncopation is when rhythmic accents align with metrically weak positions of a metrical beat structure (e.g.,  having accents half way between when people tap their foot rather than directly aligned with the foot taps).","""none"" (0); ""a little"" (0.5); or ""a lot"" (1)."
+Maj (-) / min (-) tonality,Transcription,"Healing, Lullaby",Tonal quality or mode of the transcription (major or minor) based on the Krumhansl-Schmuckler key-finding algorithm.,"""Major"" (0); ""Minor"" (1)"
+Ornamentation,Expert Annotation,Lullaby,"Melodic embellishment by the singer, usually via rapid 'passing notes' that decorate a simpler underlying melodic structure.","""not present"" (0); ""present"" (1)"
+Note Density,Transcription,Lullaby,The average number of notes per second in a given song,range: 0.44 - 6.82
+Note Duration,Transcription,"Dance, Lullaby","The average duration per note, in seconds.",range: 0.17 - 2.04
+Intervallic distinctiveness,Transcription,"Lullaby, Healing",Fraction of melodic intervals that belong to the second most common interval divided by the fraction of melodic intervals belonging to the most common interval; 0 if there are not two distinct most common melodic intervals.,range: 0 - 1
+Duple rhythm,Expert Annotation,"Dance, Lullaby",The presence of duple subdivisions of the beat,range: 0 - 1
