@@ -1,0 +1,66 @@
+/*
+ For styles specific to this experiment.
+ Common experiment styles can be found in ../common/styles.css
+*/
+
+@media (orientation: landscape) {
+  :global(.button-scale-tbl) {
+    width: 10vw;
+    height: 10vw;
+  }
+  :global(.button-scale) {
+    width: 12vw;
+    height: 12vw;
+  }
+  :global(.button-scale-h) {
+    width: 15vw;
+    height: 15vw;
+  }
+  :global(.susie-scale) {
+    width: 15vw;
+    height: 15vw;
+  }
+  :global(.speechBubble-scale) {
+    width: 20vw;
+    height: 16vw;
+  }
+  :global(.arrow-scale) {
+    width: 10vw;
+    height: 8vw;
+  }
+}
+
+@media (orientation: portrait) {
+  :global(.button-scale-tbl) {
+    width: 17vw;
+    height: 17vw;
+  }
+  :global(.button-scale) {
+    width: 20vw;
+    height: 20vw;
+  }
+  :global(.button-scale-h) {
+    width: 25vw;
+    height: 25vw;
+  }
+  :global(.susie-scale) {
+    width: 30vw;
+    height: 30vw;
+  }
+  :global(.speechBubble-scale) {
+    width: 40vw;
+    height: 32vw;
+  }
+  :global(.arrow-scale) {
+    width: 20vw;
+    height: 16vw;
+  }
+  :global(.font-scale) {
+    font-size: 2.5vw;
+    font-weight: bold;
+  }
+  :global(.portrait-tbl) {
+    margin: 0px;
+    padding: 0px;
+  }
+}
