@@ -1,3 +1,11 @@
+// This code generates the naïve listener experiment run in Hilton & Crowley-de Thierry et al. (2022).
+// You can try the experiment at https://themusiclab.org/quizzes/kfc.
+//
+// WARNING: 
+// This code is not executable outside of a Pushkin instance. It is posted here for transparency only.
+// A working standalone jsPsych version of this experiment is available at https://github.com/themusiclab/form-function-kids.
+
+
 /* eslint-disable max-len */
 require('script-loader!jspsych/jspsych.js');
 require('script-loader!siriwave/dist/siriwave.min.js');
