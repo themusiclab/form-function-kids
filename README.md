@@ -1,5 +1,4 @@
-> ⚠️ This repository is currently being updated. Some files and instructions are out of date or inaccurate. We will remove this message when the latest version of our code and materials has been posted. Please contact Courtney Hilton (courtneyhilton@g.harvard.edu) if you have a question.
- 
+
 # Children infer the behavioral contexts of unfamiliar foreign songs
 
 This is the repository for Hilton and Crowley-de Thierry et al. (2022). "Children infer the behavioral contexts of unfamiliar foreign songs". The manuscript is publicly available at https://psyarxiv.com/rz6qn/.
