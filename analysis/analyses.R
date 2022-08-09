@@ -278,6 +278,17 @@ kids$d$avg <- map(c('dance', 'lullaby', 'healing') %>% set_names, ~ kids$d$ages[
 # d' across ages for only English speaking participants
 kids$d$english_ages <- map(c('dance', 'lullaby', 'healing') %>% set_names, ~ pooled_dprime(KFC_clean_complete %>% filter(language == "English"), str_to_upper(.x), TRUE, "english"))
 
+# d' for adults
+FC_love_data <- read_csv(here("results", "preprocessed_FC_wLove.csv")) %>% 
+  group_by(user_id) %>% 
+  filter(
+    # only keeping participants without any missing trials (e.g., due to exclusions)
+    n() == 8,
+  ) %>% 
+  ungroup()
+adults$d$group <- map(c('dance', 'lullaby', 'healing', 'love') %>% set_names, ~ pooled_dprime(FC_love_data, str_to_upper(.x)))
+
+
 # 8.  d-prime regressions -------------------------------------------------
 
 

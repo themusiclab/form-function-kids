@@ -14,10 +14,12 @@ header-includes:
 - \definecolor{bleu}{HTML}{2200cc}
 notes-after-punctuation: no
 output:
-  pdf_document: 
+  pdf_document:
     fig_caption: yes
     latex_engine: xelatex
   word_document: default
+  html_document:
+    df_print: paged
 urlcolor: bleu
 link-citations: yes
 linkcolor: bleu
@@ -30,12 +32,17 @@ always_allow_html: yes
 
 \vspace{0.1in}
 
+\normalsize
+\textbf{NOTE:} This manuscript has now been accepted at The Journal of Experimental Psychology: General, and should be cited as: Hilton, C. B., Crowley-de Thierry, L., Yan, R., Martin, A., & Mehr, S. A. (2022). Children infer the behavioral contexts of unfamiliar foreign songs. *Journal of Experiment Psychology: General*.
+
+\vspace{0.1in}
+
 \justifying
 \normalsize
 Courtney B. Hilton$^{1,2,\wedge,\ast}$, Liam Crowley-de Thierry$^{3,\wedge,\ast}$, Ran Yan$^{2,4}$, Alia Martin$^{3}$, & Samuel A. Mehr$^{1,2,5,\ast}$
 
 \footnotesize
-$^{1}$Haskins Laboratories, New Haven, CT 06511, USA.\
+$^{1}$Haskins Laboratories, Yale University, New Haven, CT 06511, USA.\
 $^{2}$Department of Psychology, Harvard University, Cambridge, MA 02138, USA.\
 $^{3}$School of Psychology, Victoria University of Wellington, Wellington 6012, New Zealand.\
 $^{4}$Department of Psychology, University of Michigan, Ann Arbor, MI 48109, USA.\
@@ -43,7 +50,7 @@ $^{5}$Data Science Initiative, Harvard University, Cambridge, MA 02138, USA.
 
 $^{\wedge}$These authors contributed equally.
 
-\*Corresponding author. Emails: [courtneyhilton\@g.harvard.edu](mailto:courtneyhilton@g.harvard.edu){.email}, [liam.crowleydethierry\@vuw.ac.nz](mailto:liam.crowleydethierry@vuw.ac.nz){.email}, [sam\@wjh.harvard.edu](mailto:sam@wjh.harvard.edu){.email}
+\*Corresponding author. Emails: [courtney.hilton\@yale.edu](mailto:courtney.hilton@yale.edu){.email}, [liam.crowleydethierry\@vuw.ac.nz](mailto:liam.crowleydethierry@vuw.ac.nz){.email}, [sam\@wjh.harvard.edu](mailto:sam@wjh.harvard.edu){.email}
 
 \small
 
@@ -184,7 +191,7 @@ Music commonly appears in behavioral contexts in which it can be seen as playing
 
 Music is a ubiquitous part of human culture that plays a variety of functional roles in our day-to-day lives [@Mehr2019; @Trehub2015a; @Nettl2005; @Lomax1968]: We sing songs to entertain each other, to find spiritual connection, to tell stories, to regulate our emotions, or just to pass the time.
 
-Whereas some musical contexts are idiosyncratic, as in the encoding of complex geographical knowledge in song by some groups of Indigenous Australians [@Norris2014], other contexts are recurrent across societies and tend to co-occur with the same acoustic features. For example, lullabies tend to have slow tempos; smooth, minimally accented contours; and a narrow dynamic and pitch range, as has been long-established in western societies [@Bergeson1999; @Trehub1998a; @Trehub1993], and recently in more globally representative samples of societies [@Hilton2021a; @Mehr2019]. The findings that music appears universally in conjunction with particular behavioral contexts (e.g., infant care), and that examples of music in a given context share particular acoustic features (e.g., minimal accents), imply a link between form and function in music production.
+Whereas some musical contexts are idiosyncratic, as in the encoding of complex geographical knowledge in song by some groups of Indigenous Australians [@Norris2014], other contexts are recurrent across societies and tend to co-occur with the same acoustic features. For example, lullabies tend to have slow tempos; smooth, minimally accented contours; and a narrow dynamic and pitch range, as has been long-established in western societies [@Bergeson1999; @Trehub1998a; @Trehub1993], and recently in more globally representative samples of societies [@Hilton2022a; @Mehr2019]. The findings that music appears universally in conjunction with particular behavioral contexts (e.g., infant care), and that examples of music in a given context share particular acoustic features (e.g., minimal accents), imply a link between form and function in music production.
 
 Adults are sensitive to this link, in that they reliably distinguish song functions even when examples are unfamiliar and foreign. This has been demonstrated in experiments where naïve listeners are asked to identify the context in which a song was originally used, purely on the basis of the sounds it contains. Adult listeners indeed identify lullabies when paired with love songs as foils [@Trehub1993a] and distinguish lullabies, dance songs, healing songs, and love songs from one another [@Mehr2019; @Mehr2018a].
 
@@ -218,7 +225,7 @@ Because love songs were ambiguously detected in some prior work [@Mehr2018a], an
 
 ```{r fig1}
 #| fig.cap = "\\textbf{Figure 1.} Schematic of the test phase of the experiment. Children listened to the songs and indicated their responses in the context of an online game. \\textbf{a}, Parents guided their children's participation with the assistance of a progress bar, which indicated which portions of the experiment were intended to be for parents alone, parents and children together, or children alone. The progress bar was visible throughout the experiment. \\textbf{b}, The game was narrated by \\textit{Susie the Star}, an animated character whose instructions were spoken aloud and printed in speech bubbles on the screen. \\textbf{c}, During testing children listened to a series of songs. \\textbf{d}, After each song, \\textit{Susie} asked them to guess its behavioral context and indicate their response by clicking or tapping an image (with accompanying text)."
-knitr::include_graphics(here("viz", "figures", "fig1-1-mod.pdf"))
+knitr::include_graphics(here("viz", "figures", "fig1-1.pdf"))
 ```
 
 ## Procedure
@@ -235,11 +242,11 @@ Susie then explained the three song categories that children would be tested on 
 
 Susie then played the children a counterbalanced set of six songs (two per song type) drawn randomly from the *Natural History of Song Discography* and presented in a random order. The excerpts were 14 seconds long and each played in its entirety before the child could advance. After each song, Susie asked "What do you think that song was for?" and children made a guess by clicking or tapping on a labeled illustration corresponding with one of the three song types (see Figure 1; i.e., a three-response classification task). After they indicated their inference, we also asked children to rate how much they liked the song, for use in a different study. Positive feedback was always given after each trial (e.g., "Good job!"), with an arbitrary number of "points" awarded (+20 points when correct and +15 points when incorrect).
 
-Last, parents answered debriefing questions. The questions confirmed whether the child had worn headphones during the experiment (if, at the beginning of the study, the parent had stated the child would wear headphones), if the parent had assisted the child during the training portion of the experiment, and if the parent had assisted the child during the test questions (those who had were excluded from analyses; see Participants, above).
+Last, parents answered debriefing questions. The questions confirmed whether the child had worn headphones during the experiment (if, at the beginning of the study, the parent had stated the child would wear headphones; we decided to not exclude based on headphone usage as it made no discernible difference), if the parent had assisted the child during the training portion of the experiment, and if the parent had assisted the child during the test questions (those who had were excluded from analyses; see Participants, above).
 
 ## Pilot studies and preregistration
 
-In designing the experiment, we first piloted the experiment in-person with four children (ages 6, 7, 9, and 10), to explore whether the procedure was well-explained and intuitive for chilren, and to observe potential parental interference. The children easily understood the task and did not elicit help from their parents; at times they *rejected* parental assistance (e.g., as if to say "I can do this on my own, mum").
+In designing the experiment, we first piloted the experiment in-person with four children (ages 6, 7, 9, and 10), to explore whether the procedure was well-explained and intuitive for children, and to observe potential parental interference. The children easily understood the task and did not elicit help from their parents; at times they *rejected* parental assistance (e.g., as if to say "I can do this on my own, mum").
 
 We continued by running a pilot version of the experiment with 500 children recruited online (50 children in each age group, range 3-12; 221 male, 267 female, 12 other) to provide a dataset for exploratory analyses. Based on these data, and our broader theoretical interests motivated in the introduction section of this paper, we preregistered three confirmatory hypotheses to be tested in a larger sample: (i) in the full cohort of children, accurate classification of behavioral contexts overall and in all three song types, including after adjusting for response bias via $d'$ analyses; (ii) a positive but modestly sized effect of age on accuracy ($R^{2} < .05$); and (iii) little to no effect of musical exposure in the home on accuracy.
 
@@ -249,13 +256,13 @@ The preregistration is available at <https://osf.io/56zne>.
 
 ## Notes on the unmoderated citizen-science approach
 
-Most psychological studies of children are conducted in-person (e.g., in a laboratory or school) or in a moderated online setting (e.g., via videoconference). Our approach instead relies on an unmoderated, *citizen-science* approach. While this approach has the advantage of larger-scale, and often more diverse recruitment than in-person or moderated online studies [@Hilton2022; @LiSubmitted], it has two potential risks.
+Most psychological studies of children are conducted in-person (e.g., in a laboratory or school) or in a moderated online setting (e.g., via videoconference). Our approach instead relies on an unmoderated, *citizen-science* approach. While this approach has the advantage of larger-scale, and often more diverse recruitment than in-person or moderated online studies [@Hilton2022; @Li2022], it has two potential risks.
 
 ### The risk of participant misrepresentation: Are the children really children?
 
 As we did not directly observe the participants, we cannot verify that participants in the study are, in fact, children, as opposed to adults posing as children, or malicious automated participants (e.g., bots). 
 
-As no compensation was given, it is not clear what incentive there would be for either possibility, and there is growing evidence that uncompensated online and compensated lab-based data collection produce similar results across a number of domains [@Huber2020; @Hartshorne2019; @Germine2012]. Nevertheless, we analyzed several forms of metadata to explore the risk of participant misrepresentation.
+As no compensation was given, it is not clear what incentive there would be for either possibility, and there is growing evidence that compared to traditional compensated lab-based data collection, comparable results can be reliably obtained across a number of domains using online data collection with either compensated [@Coppock2019; @Ratcliff2021] or uncompensated [@Huber2020; @Hartshorne2019; @Germine2012] recruitment. Nevertheless, we analyzed several forms of metadata to explore the risk of participant misrepresentation.
 
 First, we examined the timecourse of participant recruitment across the child and adult cohorts  (SI Figure 3). In particular, we inspected large spikes in recruitment, with the idea that spikes that are not explicable by known events could be attributable to bots or other malicious participants. All spikes in recruitment were attributable to known internet exposure such as viral news coverage, however, suggesting that increases in recruitment during these spikes corresponded with *bona fide* participants.
 
@@ -271,7 +278,7 @@ As we did not directly observe the participants, we cannot verify whether or not
 
 First, we designed the experiment to be easy to understand, so as to limit the need for children to ask for help. We used clear, child-friendly visual and audio elements and interactive training trials to help the child intuitively understand the task; for the parents, we included a progress bar throughout to communicate when parents should and should not intervene. These are depicted in Figure 1 and should in principle limit parent intervention. Indeed, in in-person pilot participants, children did not elicit any help from parents, and even discouraged their parents from intervening (see Pilot studies and preregistration, above).
 
-Second, at the completion of the online experiment, we explicitly asked parents whether they complied with the request to not interfere with the child's performance. Post-hoc prompts on task compliance have been shown to be effective in other uncompensated online experiments [@Reinecke2015]; parents have little incentive to lie in response to such a question. The vast majority of parents stated that they did not assist their children in the experiment and we excluded those who did (see Participants, above).
+Second, at the completion of the online experiment, we explicitly asked parents whether they complied with the request to not interfere with the child's performance. Post-hoc prompts on task compliance have been shown to be effective in other uncompensated online experiments [@Reinecke2015]; parents have little incentive to lie in response to such a question. The vast majority of parents stated that they did not assist their children in the experiment and we excluded those who did (see Participants, above). However, we cannot rule out the possibility that parents implicitly affected their child's performance without intending to.
 
 Third, even if parents *did* try to help their child, adult performance in the task reported here is far below ceiling [@Mehr2019]: parents would unlikely have been confident that they knew the answers themselves. 
 
@@ -292,7 +299,7 @@ Thus, we also computed $d'$ scores to assess sensitivity to song function indepe
 This principal result was robust to the inclusion or exclusion of two subgroups of participants whose reported ages were ambiguous (SI Text 1) and was consistent across subgroups of participants with different native languages and locations (SI Text 2).
 
 ```{r fig2}
-#| fig.cap = "\\textbf{Figure 2 | Accurate classification of all three song types and cohort-wide, with no effect of age.} (\\textbf{a}) Mean *d*-prime scores across all children show above-chance classification of each song type, independent of their response bias. (\\textbf{b}) Above-chance sensitivity replicates for each age group, except for some of the healing song estimates whose 95% confidence-intervals crossed zero. Performance did not improve with age, either averaging across all song-types, or within dance, lullaby, or healing songs individually (ps > 0.05). In both panels, the circles indicate *d*-prime scores and the error bars indicate the 95% confidence intervals. In panel \\textbf{b}, the three thick lines depict a linear regression for each song type and the shaded regions represent the 95% confidence intervals from each regression."
+#| fig.cap = "\\textbf{Figure 2 | Accurate classification of all three song types and cohort-wide, with no effect of age.} (\\textbf{a}) Mean *d*-prime scores across all children show above-chance classification of each song type, independent of their response bias. (\\textbf{b}) Above-chance sensitivity replicates for each age group, except for some of the healing song estimates whose 95% confidence-intervals crossed zero. Performance did not improve with age, either averaging across all song-types, or within dance, lullaby, or healing songs individually (ps > 0.05). As a reference, the rightmost triangular points depict performance in a similar experiment with 98,150 adults between 18 and 99 years of age (mean 31 years). Small differences in task demands make strict comparison to the children problematic, but qualitatively, they show comparable performance. In both panels, the circles indicate *d*-prime scores and the error bars indicate the 95% confidence intervals. In panel \\textbf{b}, the three thick lines depict a linear regression for each song type and the shaded regions represent the 95% confidence intervals from each regression."
 knitr::include_graphics(here("viz", "figures", "fig2-1.pdf"))
 ```
 
@@ -329,7 +336,7 @@ Notably, the partial $R^2$s from these models show that children's and adults' i
 
 ## Children's inferences are driven by objective acoustic correlates of musical function
 
-Previous work demonstrated that a core set of musical features reliably distinguished dance songs, lullabies, and healing songs from one another across 30 world regions [@Mehr2019]. In an exploratory test of our fifth preregistered hypothesis, we tested the degree to which chilren's inferences reflected these universal musical biases.
+Previous work demonstrated that a core set of musical features reliably distinguished dance songs, lullabies, and healing songs from one another across 30 world regions [@Mehr2019]. In an exploratory test of our fifth preregistered hypothesis, we tested the degree to which children's inferences reflected these universal musical biases.
 
 We first trained a LASSO multinomial logistic classifier to infer song type from the acoustic features, trained with leave-one-out cross-validation at the level of world region. We then derived predictions for each song in the corpus such that the predictions for songs in a given world-region were based on information from only songs in other regions. This yielded groupings of three probabilities per song (e.g., for an ambiguous song, the model might predict [0.3 dance; 0.3 lullaby; 0.4 healing], whereas for a less ambiguous song, the model might predict [0.8 dance; 0.0 lullaby; 0.2 healing]). 
 
@@ -341,19 +348,19 @@ In a model predicting song-wise probabilities from the LASSO-selected features f
 
 # Discussion
 
-We found that children make accurate inferences concerning the behavioral contexts of unfamiliar foreign lullabies, dance songs, and healing songs. The songs were unfamiliar to the children and drawn from a representative sample of vocal music from `r length(unique(songs$culture))` human societies, but their guessing patterns were well above chance and strikingly similar to those of adults. Older children (teenagers) performed no better than the youngest chilren in our sample (age 4), who already performed at adult-like levels. Musical exposure in the home, from either recorded music or parental singing, was also unrelated to children's performance. These results suggest that the ability to infer musical function from acoustical forms, at least in the contexts studied here, develops early and requires minimal direct experience.
+We found that children make accurate inferences concerning the behavioral contexts of unfamiliar foreign lullabies, dance songs, and healing songs. The songs were unfamiliar to the children and drawn from a representative sample of vocal music from `r length(unique(songs$culture))` human societies, but their guessing patterns were well above chance and strikingly similar to those of adults. Older children (teenagers) performed no better than the youngest children in our sample (age 4), who already performed at adult-like levels. Musical exposure in the home, from either recorded music or parental singing, was also unrelated to children's performance. These results suggest that the ability to infer musical function from acoustical forms, at least in the contexts studied here, develops early and requires minimal direct experience.
 
 The similarities in children's and adults' inferences were detectable even at the level of individual musical features of each song. For example, faster tempo, more stable beat structure, and more rhythmic accentuation, led listeners to guess that a song was used for dancing; less rhythmic accentuation and slower tempo cued listeners that a song was used as a lullaby; and songs with a slower tempo and less beat stability suggested that a song was used for healing. Children's inferences were also robustly correlated with those of a classifier trained on the objective acoustic differences in the corpus, demonstrating a link between early perceptual intuitions and universal acoustic biases that shape human music production. This link, and the few cases where children's intuitions differed from universal biases, present an intriguing target for future research.
 
-What explains these robust associations between musical features and functional inferences? We speculate that they tie into the prototypical emotional and physiological content of songs' behavioral contexts. Across cultures, dance songs typically aim to increase arousal (e.g., energizing groups of people to dance) whereas lullabies aim to decrease it [e.g., soothing an infant: @Hilton2021a; @Mehr2019]. This is mirrored in the arousal-mediating effects of both rhythmic accentuation [@Weninger2013; @Ilie2006; @Schubert2004] and tempo [@Yamamoto2007; @Husain2002; @Balch1996; @Holbrook1990]. As in other universal acoustic form-function mappings [@Perlman2021; @Patten2018; @Fitch2002; @Fitch1997], this relationship may be grounded in the physics of sound production: the production of sounds with high tempo and accentuation, for example, requires more energy than does the production of slower, less accentuated sounds. These features are thus associated with higher arousal. Indeed, from a young age, infant arousal is reliably modulated by these features [@Bainbridge2021; @Cirelli2019].
+What explains these robust associations between musical features and functional inferences? We speculate that they tie into the prototypical emotional and physiological content of songs' behavioral contexts. Across cultures, dance songs typically aim to increase arousal (e.g., energizing groups of people to dance) whereas lullabies aim to decrease it [e.g., soothing an infant: @Hilton2022a; @Mehr2019]. This is mirrored in the arousal-mediating effects of both rhythmic accentuation [@Weninger2013; @Ilie2006; @Schubert2004] and tempo [@Yamamoto2007; @Husain2002; @Balch1996; @Holbrook1990]. As in other universal acoustic form-function mappings [@Perlman2021; @Patten2018; @Fitch2002; @Fitch1997], this relationship may be grounded in the physics of sound production: the production of sounds with high tempo and accentuation, for example, requires more energy than does the production of slower, less accentuated sounds. These features are thus associated with higher arousal. Indeed, from a young age, infant arousal is reliably modulated by these features [@Bainbridge2021; @Cirelli2019].
 
 Beat stability was also predictive of "used for dancing" inferences. Dancing characteristically involves temporal coordination, often between people and a perceived musical beat. As such, the more stable the beat, the more reliable it is as a cue to support temporal coordination. Children may naturally make this connection via the psychological effects of "groove", an impulse for rhythmic body movement in response to music with high beat stability, fast tempos, more rhythmic accentuation, and a moderate amount of rhythmic complexity [@Witek2014; @Janata2012]. In both children and adults, these features were the strongest predictors of "used for dancing" inferences, and there is some evidence that infants as young as 5 months share such impulses linking rhythmic musical features to movement [@Zentner2010].
 
 The acoustic correlates of healing songs are more difficult to interpret. Their traditional behavioral context tends to be characterized by formal and religious activity across cultures [@Mehr2019], such as those found in shamanistic healing rituals [@Singh2018]. But these rituals sometimes include dancing, and may thus constitute a fuzzier and less distinct category than dance or lullaby; for example, among both children and adults, the song most consistently categorized as a dance song (96% of the time) was, in fact, a healing song. The weaker discriminability of healing songs by naive listeners, and the weaker correlations between human inferences and objective distinguishing features underscores this fuzziness. This fuzziness is also germane to the behavioral context of healing songs more broadly, since a person's health is rarely externally observable, unlike the relatively more concrete referents of babies sleeping and people dancing. Indeed, @Singh2018 argues that healing rituals often function in part to signal a healer's otherworldliness and ability to transact with unobserved spiritual causes of health. So while music appears universally in the context of healing [@Mehr2019; @Singh2018], and has well-recognized potential in modern clinical settings [@Cheever2018], the mechanisms and acoustical correlates of inferences about traditional healing songs are far less clear and require further study.
 
-Together, our findings suggest that some form-function inferences about music may be maturational rather than experiential in origin: requiring minimal direct experience to develop. Many other facets of music perception develop precocially in this way, including beat processing [@Zentner2010; @Winkler2009; @Phillips-Silver2005]; sensitivity to basic tonal structure [@Perani2010; @Lynch1992]; prenatally present attentional orientations to music [@Granier-Deferre2011]; biases for socially-relevant musical information [@Mehr2016; @Mehr2017]; and indeed, distinct physiological responses to lullabies, relative to non-lullabies [@Bainbridge2021]. Some of these abilities continue to develop with experience; for example, in the first year of life, the perception of metrical [@Hannon2005] and tonal [@Lynch1990] structures becomes tuned to regularities of the infants' native musical culture, and later stages of this can even continue past 12 years of age in ways that depend upon rich experiential input [@Brandt2012]. By contrast, the present findings show an adult-like competence as late as 4 years of age (and potentially earlier; see SI Text 1), irrespective of variation in musical exposure. 
+Together, our findings suggest that some form-function inferences about music may be more maturational rather than experiential in origin: requiring minimal direct experience to develop an initial capacity. Many other facets of music perception develop precocially in this way, including beat processing [@Zentner2010; @Winkler2009; @Phillips-Silver2005]; sensitivity to basic tonal structure [@Perani2010; @Lynch1992]; prenatally present attentional orientations to music [@Granier-Deferre2011]; biases for socially-relevant musical information [@Mehr2016; @Mehr2017]; and indeed, distinct physiological responses to lullabies, relative to non-lullabies [@Bainbridge2021]. Some of these abilities continue to develop with experience; for example, in the first year of life, the perception of metrical [@Hannon2005] and tonal [@Lynch1990] structures becomes tuned to regularities of the infants' native musical culture, and later stages of this can even continue past 12 years of age in ways that depend upon rich experiential input [@Brandt2012]. By contrast, the present findings show an adult-like competence as late as 4 years of age (and potentially earlier; see SI Text 1), irrespective of variation in musical exposure. 
 
-This is not to say that experience does *not* shape listeners' understanding of music. Experience shapes many facets of musicality, from musical preferences [@Schellenberg2008b; @Peretz1998], to the enculturation of extramusical associations [@Margulis2022]. Experience can even exert subtle influences on our perception of basic structures of rhythm [@Drake2003] and pitch [@Jacoby2019]; the influences are not be limited to *musical* experience, as shown by the effect of linguistic experiences on music processing [@Liu2021]. And while we studied a relatively diverse sample of children and a highly diverse set of recordings (see SI Tables 1-3), we did not systematically sample diverse experiences: the study instructions were in English and the children were recruited via an English-language website. These limitations suggest a need for further studies conducted in multiple languages and recruiting from a wide variety of geographic regions, so as to better characterize the potential effects of early musical experience on listeners' understanding of music.
+This is not to say that experience does *not* shape listeners' understanding of music. Experience shapes many facets of musicality, from musical preferences [@Schellenberg2008b; @Peretz1998], to the enculturation of extramusical associations [@Margulis2022]. Experience can even exert subtle influences on our perception of basic structures of rhythm [@Drake2003] and pitch [@Jacoby2019]; the influences need not be limited to *musical* experience, as shown by the effect of linguistic experiences on music processing [@Liu2021]. And while we studied a relatively diverse sample of children and a highly diverse set of recordings (see SI Tables 1-3), we did not systematically sample diverse experiences: the study instructions were in English and the children were recruited via an English-language website. These limitations suggest a need for further studies conducted in multiple languages and recruiting from a wide variety of geographic regions, so as to better characterize the potential effects of early musical experience on listeners' understanding of music.
 
 Our results raise the possibility that some forms of musical meaning may not be entirely experience-dependent, building instead on instinctive signalling mechanisms, not unlike those thought to govern many nonhuman-animal vocalizations [@Mehr2021]. From this perspective, foundations for musical understanding come from the combination of acoustic predispositions, shared with other species [@Kamiloglu2020; @Filippi2017; @Owren2001]; human-unique social-cognitive skills and biases [@Herrmann2007], which play a key role in early learning [@Liberman2017; @Kinzler2007; @Baldwin1996], including in music [@Mehr2017b; @Xiao2017; @Mehr2016]; and their interaction with related modalities, such as movement and emotion [@Sievers2019; @Sievers2013].
 
@@ -361,7 +368,7 @@ Thus, despite the variety of roles that music plays in our lives and the differe
 
 # Context of the research
 
-This research builds on previous studies from our group [@Mehr2019; @Mehr2018a; @Hilton2021a], demonstrating (a) cross-cultural regularities in the associations between acoustical forms of music and particular behavioral contexts in which music appears; and (b) the sensitivity of adults to these associations. Here, we explored how musical experience in childhood shapes that sensitivity, using the same stimuli as previous work. We also compared children's intuitions about music to adults' directly, and analyzed how these intuitions correlate with specific musical features (providing clues about the mechanisms underlying the main effects). The results complement those of another recent study [@Bainbridge2021], where infants showed differential physiological responses to unfamiliar foreign lullabies, relative to non-lullabies; those early-appearing, implicit responses to different forms of music, may help to explain children's high performance in classifying behavioral contexts for music. Together, these studies inform theories of the basic design features of a human psychology of music, including debates surrounding the biological foundations of music [@Mehr2020] and its relation to more general aspects of cognition [@Hilton2020].
+This research builds on previous studies from our group [@Mehr2019; @Mehr2018a; @Hilton2022a], demonstrating (a) cross-cultural regularities in the associations between acoustical forms of music and particular behavioral contexts in which music appears; and (b) the sensitivity of adults to these associations. Here, we explored how musical experience in childhood shapes that sensitivity, using the same stimuli as previous work. We also compared children's intuitions about music to adults' directly, and analyzed how these intuitions correlate with specific musical features (providing clues about the mechanisms underlying the main effects). The results complement those of another recent study [@Bainbridge2021], where infants showed differential physiological responses to unfamiliar foreign lullabies, relative to non-lullabies; those early-appearing, implicit responses to different forms of music, may help to explain children's high performance in classifying behavioral contexts for music. Together, these studies inform theories of the basic design features of a human psychology of music, including debates surrounding the biological foundations of music [@Mehr2020] and its relation to more general aspects of cognition [@Hilton2020].
 
 ### Acknowledgments
 
@@ -377,6 +384,7 @@ We thank all the families who participated in this research; C. Bainbridge, A. B
 - C.B.H. led analyses and designed the figures, with contributions from L.C-T., R.Y., A.M., and S.A.M.
 - C.B.H. and S.A.M. wrote the original manuscript, with contributions from L.C-T., R.Y., and A.M.
 - C.B.H. wrote the revision, with contributions from L.C-T and S.A.M., and all authors approved it.
+- C.B.H. wrote the second revision, with contributions from L.C-T and S.A.M., and all authors approved it.
 
 \newpage
 
@@ -564,7 +572,7 @@ songs %>%
       longtable = TRUE, booktabs = TRUE, linesep = "", align = "l") %>% 
   kable_styling(latex_options = c("repeat_header"),
                 font_size = 7) %>% 
-  footnote(general = "Summary information about the songs chilren heard.",
+  footnote(general = "Summary information about the songs children heard.",
            general_title = "SI Table 3",
            title_format = "bold",
            footnote_as_chunk = TRUE,
@@ -715,7 +723,7 @@ regression_table2(mods$equiv2$full$dance,
                     "Duple rhythm",
                     "Note duration"
                   ),
-                  "Musical features influencing children's \`\`dance\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, chilren's intuitions (erroneously) deviate from the objective differences between song types.",
+                  "Musical features influencing children's \`\`dance\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, children's intuitions (erroneously) deviate from the objective differences between song types.",
                   8)
 # lullaby
 regression_table2(mods$equiv2$full$lullaby, 
@@ -733,7 +741,7 @@ regression_table2(mods$equiv2$full$lullaby,
                     "Vibrato",
                     "Duple meter"
                   ),
-                  "Musical features influencing children's \`\`lullaby\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, chilren's intuitions (erroneously) deviate from the objective differences between song types.",
+                  "Musical features influencing children's \`\`lullaby\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, children's intuitions (erroneously) deviate from the objective differences between song types.",
                   9)
 
 # healing
@@ -747,7 +755,7 @@ regression_table2(mods$equiv2$full$healing,
                     "Vibrato",
                     "Melodic simplicity"
                   ),
-                  "Musical features influencing children's \`\`healing\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, chilren's intuitions (erroneously) deviate from the objective differences between song types.",
+                  "Musical features influencing children's \`\`healing\" guesses, compared to the features that objectively distinguish song types from one another. The LASSO-selected correlates for children are listed on the left side of the table; those that reliably correlate with song types across world regions are on the right side and are tested relative to the children (i.e., from the interaction terms in the model). Contrasting SI Tables 5-7, quite a few features differ significantly, indicating that in many cases, children's intuitions (erroneously) deviate from the objective differences between song types.",
                   10)
 
 ```
