@@ -1,7 +1,7 @@
 
 # Children infer the behavioral contexts of unfamiliar foreign songs
 
-This is the repository for Hilton and Crowley-de Thierry et al. (2022). "Children infer the behavioral contexts of unfamiliar foreign songs". The manuscript is publicly available at https://psyarxiv.com/rz6qn/.
+This is the repository for Hilton and Crowley-de Thierry et al. (in press, JEP:G) "Children infer the behavioral contexts of unfamiliar foreign songs". The manuscript is publicly available at https://psyarxiv.com/rz6qn/.
 
 You can find the following here:
 - an R Markdown file that generates the manuscript
