@@ -154,7 +154,6 @@ full_run <- FALSE
 
 if (full_run == TRUE) {
   source(here("analysis", "builder.R"))
-  source(here("analysis", "feature_selection.R"))
   source(here("analysis", "analyses.R"))
   knitr::knit(here("viz", "figures.Rmd"))
 } else {
