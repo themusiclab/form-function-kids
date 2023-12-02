@@ -14,7 +14,7 @@ Further data and information are available elsewhere:
 - the preregistration for the study is at https://osf.io/56zne
 - you can participate in the naïve listener experiment at <https://themusiclab.org/quizzes/kfc>
 
-**For assistance, please contact the corresponding authors: Courtney Hilton (courtneyhilton@g.harvard.edu), Liam Crowley-de Thierry (liam.crowleydethierry@vuw.ac.nz), and Samuel Mehr (sam@wjh.harvard.edu).**
+**For assistance, please contact the corresponding authors: Courtney Hilton (courtney.hilton@auckland.ac.nz), Liam Crowley-de Thierry (liam.crowleydethierry@vuw.ac.nz), and Samuel Mehr (mehr@hey.com).**
 
 ## Anatomy of the repo
 
